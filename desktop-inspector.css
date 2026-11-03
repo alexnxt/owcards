@@ -1,0 +1,21 @@
+#desktopStart[hidden],#desktopTextActions[hidden]{display:none!important}
+@media(max-width:850px){#desktopStart,#desktopTextActions{display:none!important}}
+@media(min-width:851px){
+ #desktopToolHost:has(>#toolDrawer[hidden]):after{display:none}
+ body.desktop-inspector #contextActionDock{display:none!important}
+ body.desktop-inspector.context-action-mode.unified-tools main .stage{height:calc(100dvh - 215px)}
+ #desktopStart{padding:16px 0}#desktopStart h3{font-size:17px;margin:0 0 8px}#desktopStart p{color:var(--ui-muted);line-height:1.6;margin:0 0 20px}
+ #desktopStart button{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;margin:10px 0;text-align:left}
+ #desktopTextActions{display:flex;gap:5px;margin:8px 0 12px}#desktopTextActions button{display:flex;flex:1;flex-direction:column;align-items:center;gap:4px;padding:7px 4px;font-size:12px;min-width:0}
+ #desktopStart svg,#desktopTextActions svg{width:20px;height:20px}
+ body.desktop-inspector #toolDrawerContent{overflow-x:hidden}
+ body.desktop-inspector #toolDrawer:has(#richEditor) .text-target-row,body.desktop-inspector #toolDrawer:has(#richEditor) label[for=richTarget]{display:none!important}
+ body.desktop-inspector #toolDrawer:has(#richEditor) #richTarget{display:none!important}
+ body.desktop-inspector:not(.inspector-writing) #toolDrawer:has(#richEditor) #textWritePane{display:block!important;margin:10px 0}
+ body.desktop-inspector:not(.inspector-writing) #textWritePane textarea{min-height:64px;height:76px;font-size:16px}
+ body.desktop-inspector:not(.inspector-writing) #writingHistory,body.desktop-inspector:not(.inspector-writing) #finishTextWriting{display:none!important}
+ body.desktop-inspector #textWorkflow{margin:8px 0;gap:3px}body.desktop-inspector #textWorkflow button{font-size:12px;padding:7px 2px;min-width:0}
+ body.desktop-inspector #textMode-write{display:none!important}
+ body.desktop-inspector .drawer-heading{gap:6px;flex-wrap:wrap}body.desktop-inspector #selectionContext{flex:1;min-width:0}
+ body.desktop-inspector #selectionName{font-size:13px}
+}

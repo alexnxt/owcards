@@ -22,3 +22,14 @@ html[data-theme] #writingHistory button{display:flex;align-items:center;justify-
 #toolDrawer:has(#textWritePane:not([hidden])) #finishTextWriting{display:inline-flex;align-items:center;justify-content:center;min-width:60px;min-height:44px;margin:0;padding:8px 10px;font-size:13px}
 #toolDrawer:has(#textWritePane:not([hidden])) :is(#selectionContext,#closeToolDrawer){display:none!important}
 body #toolDrawer:has(#textWritePane:not([hidden])) .drawer-heading>#toolDrawerName{display:block;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* The writing flow is shared; only its keyboard layout depends on the screen. */
+body.inspector-writing :is(#textWorkflow,#richTarget,label[for=richTarget],#applyStyleAll,#textResetMenu,#touchSliderHint){display:none!important}
+body.inspector-writing .text-target-row{display:none!important}
+body.inspector-writing #richEditor{padding:0!important}
+body #desktopToolHost #closeToolDrawer{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 10px;flex:0 0 auto}
+body.inspector-writing #desktopToolHost #closeToolDrawer{display:none!important}
+#toolDrawer[hidden]{display:none!important}
+@media(min-width:851px){
+ #desktopToolHost:has(>#toolDrawer[hidden]):after{content:'Selecciona un texto o una foto en la tarjeta, o abre una herramienta para ver sus ajustes.';display:block;padding:8px 2px;color:var(--ui-muted);font-size:13px;line-height:1.6}
+ body.inspector-writing #desktopToolHost .drawer-heading{padding-bottom:8px}
+}
