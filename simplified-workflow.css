@@ -1,0 +1,24 @@
+#textWorkflow{display:flex;gap:5px;margin:14px 0}#textWorkflow button{flex:1;min-height:42px;padding:9px 5px;font-size:13px}#textWritePane textarea{width:100%;font-size:17px;min-height:110px;line-height:1.5}#textStylePane>.rich-tabs{margin-top:0}#textStylePane .rich-tabs button{min-height:40px}#textResetMenu{border-top:1px solid var(--ui-line);margin-top:14px;padding:12px 0}#textResetMenu>summary{font-size:13px;cursor:pointer}#textResetMenu button{display:block;width:100%;text-align:left;font-size:13px;margin-top:8px;padding:10px}#finishTextWriting{display:none}#collageHint{margin:14px 0}#removeImage{margin-top:14px;width:100%}.photo-frame>summary{min-height:40px;display:flex;align-items:center;font-size:13px!important}.photo-frame>summary:before{content:'▸';margin-right:8px}.photo-frame[open]>summary:before{content:'▾'}
+@media(max-width:850px){
+body.simple-workflow.inspector-writing #toolDrawer:not([hidden]){bottom:var(--keyboard,0px);max-height:180px!important;padding:10px 16px calc(12px + env(safe-area-inset-bottom));border-radius:16px 16px 0 0}
+body.inspector-writing #toolDrawer .drawer-heading{min-height:38px;padding:0;margin-bottom:8px}
+body.inspector-writing #finishTextWriting{display:inline-flex;align-items:center;justify-content:center;min-width:70px;min-height:38px;margin:0;font-size:13px}
+body.inspector-writing :is(#closeToolDrawer,#mobileToolbar,#touchSliderHint,#textWorkflow,#richTarget,label[for=richTarget],#applyStyleAll,#textResetMenu){display:none!important}
+body.simple-workflow.inspector-writing .stage{top:0;bottom:calc(var(--app-drawer,140px) + var(--keyboard,0px));padding:10px 12px}
+body.inspector-writing #toolDrawerContent{padding:0;overflow:hidden}
+body.inspector-writing #textWritePane textarea{display:block;height:68px;min-height:68px;max-height:68px;resize:none;font-size:17px;line-height:1.4;padding:10px 12px;margin:0}
+body.inspector-writing #richEditor{padding:0!important}
+}
+@media(max-width:500px){.design-library-save>div{flex-wrap:wrap}.design-library-save>div input{flex:1 0 100%}.design-library-save>div button{width:100%}}
+.text-writing-field{position:relative;min-width:0}
+body.simple-workflow #textWritePane .text-writing-field textarea{padding-right:56px}
+html[data-theme] #clearTextContent{position:absolute;right:5px;top:5px;display:flex;align-items:center;justify-content:center;width:44px;height:44px;min-width:44px;min-height:44px;margin:0;padding:10px;border:0;border-radius:8px;background:transparent!important;color:var(--ui-muted)!important;touch-action:manipulation}
+html[data-theme] #clearTextContent:hover{background:var(--ui-hover)!important;color:var(--ui-text)!important}
+#clearTextContent[hidden]{display:none!important}
+#writingHistory{display:none;align-items:center;gap:3px;flex:0 0 auto}
+#toolDrawer:has(#textWritePane:not([hidden])) #writingHistory{display:flex}
+html[data-theme] #writingHistory button{display:flex;align-items:center;justify-content:center;width:44px;height:44px;min-width:44px;min-height:44px;padding:9px;margin:0;border-radius:8px;touch-action:manipulation}
+#writingHistory svg{width:23px;height:23px}
+#toolDrawer:has(#textWritePane:not([hidden])) #finishTextWriting{display:inline-flex;align-items:center;justify-content:center;min-width:60px;min-height:44px;margin:0;padding:8px 10px;font-size:13px}
+#toolDrawer:has(#textWritePane:not([hidden])) :is(#selectionContext,#closeToolDrawer){display:none!important}
+body #toolDrawer:has(#textWritePane:not([hidden])) .drawer-heading>#toolDrawerName{display:block;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

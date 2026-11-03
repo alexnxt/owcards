@@ -1,0 +1,4 @@
+.stage{position:relative;padding-top:48px}
+html[data-theme] body #pageLabel.card-counter{position:absolute;right:12px;top:0;z-index:1;display:inline-flex;align-items:center;justify-content:center;min-width:44px;height:44px;padding:3px 10px;border:0!important;border-radius:8px;background:transparent!important;color:var(--ui-text)!important;font-size:12px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1;cursor:pointer;isolation:isolate;touch-action:manipulation}
+.card-counter:before{content:'';position:absolute;inset:8px 0;z-index:-1;border:1px solid var(--ui-line);border-radius:8px;background:var(--ui-panel)}.card-counter:hover:before{background:var(--ui-hover)}
+@media(max-width:850px){body.mobile-app:not(.inspector-writing) .stage{padding-top:48px}body.inspector-writing .card-counter{display:none!important}}

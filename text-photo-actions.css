@@ -1,0 +1,5 @@
+html[data-theme] #deleteSelectedText{position:fixed;z-index:60;display:flex;align-items:center;justify-content:center;width:44px;height:44px;min-width:44px;min-height:44px;padding:10px;border-radius:50%;border:1px solid var(--ui-accent)!important;background:var(--ui-panel)!important;color:var(--ui-accent)!important;box-shadow:0 2px 10px #0003;touch-action:manipulation}
+body.inspector-writing #deleteSelectedText{display:none!important}
+#toast{z-index:210!important;width:max-content;max-width:min(calc(100vw - 24px),460px);padding:12px 16px;font-size:13px;line-height:1.45;text-align:center;pointer-events:none}
+.photo-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.photo-actions button{min-width:0;min-height:42px;padding:10px 4px;white-space:nowrap;font-size:12px}.photo-frame{padding-top:8px;border-top:1px solid var(--ui-line)}
+@media(max-width:850px){body.mobile-app #toast{bottom:calc(var(--keyboard,0px) + var(--app-nav,0px) + var(--app-drawer,0px) + 12px)}body.inspector-writing #toast{bottom:calc(var(--keyboard,0px) + var(--app-drawer,0px) + 12px)}}

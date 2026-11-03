@@ -1,0 +1,14 @@
+#fillControls{border:1px solid var(--ui-line);border-radius:10px;padding:9px;margin:4px 0 10px}
+#fillControls[hidden],#fillCustomOptions[hidden]{display:none!important}
+.fill-heading{font-size:13px;font-weight:600;margin-bottom:6px}
+.fill-modes{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+html[data-theme] .fill-modes>button{font-size:12px;line-height:1.2;padding:7px 4px;min-height:44px;margin:0}
+.fill-swatches{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0}
+html[data-theme] #fillControls .fill-swatches>button{width:44px;height:44px;min-width:44px;min-height:44px;border:1px solid var(--ui-line);padding:5px;position:relative;background:transparent!important;border-radius:7px;margin:0}
+.fill-swatches>button:before{content:'';display:block;background:var(--fill-swatch);height:28px;width:100%;border-radius:3px;border:1px solid #8886;box-sizing:border-box}
+.fill-color-row{display:grid;grid-template-columns:1fr 44px;align-items:center;gap:5px}
+.fill-color-row>label{font-size:12px;margin:0!important}
+.fill-color-row>input[type=color]{width:44px;height:44px;min-height:44px;padding:3px;margin:0;border:1px solid var(--ui-line);border-radius:7px;cursor:pointer}
+.fill-color-row>input[type=text]{min-height:44px;width:100%;padding:8px;margin:0;font-size:13px;font-family:monospace;box-sizing:border-box}
+@media(min-width:851px){.fill-color-row{grid-template-columns:minmax(0,1fr) 88px}.fill-color-row>input[type=color]{justify-self:end}.fill-hex-label{grid-column:1}.fill-color-row>input[type=text]{grid-column:2;width:100%;min-width:0}}
+@media(max-width:850px){.fill-hex-label,#fillColorHex{display:none!important}}

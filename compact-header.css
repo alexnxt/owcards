@@ -1,0 +1,19 @@
+#projectMenuButton{font-weight:700}
+.theme-action-label{display:none}
+.rich-align button{display:flex;align-items:center;justify-content:center;min-height:44px;flex:1;padding:9px}
+@media(max-width:850px){
+html[data-theme] body.mobile-app header{grid-template-columns:minmax(0,1fr) 92px repeat(3,44px);gap:4px;padding:7px 8px}
+html[data-theme] body.mobile-app .file-menu{grid-column:2;grid-row:1}
+html[data-theme] body.mobile-app #export{grid-column:3;grid-row:1}
+html[data-theme] body.mobile-app #undo{grid-column:4;grid-row:1}
+html[data-theme] body.mobile-app #redo{grid-column:5;grid-row:1}
+html[data-theme] body.mobile-app #projectMenu #exportZip{font-size:13px;min-width:0;width:100%;min-height:44px;padding:10px 12px!important;white-space:normal;text-align:left}
+html[data-theme] body.mobile-app #projectMenu #exportZip:after{content:none}
+html[data-theme] body.mobile-app #projectMenu #themeToggle{display:flex;align-items:center;justify-content:flex-start;gap:10px;width:100%;height:auto;min-height:44px;min-width:0;flex:0 0 auto;padding:10px 12px;border:0;border-radius:8px;text-align:left}
+#projectMenu .theme-action-label{display:inline;font-size:13px;line-height:1.4}
+#projectMenu #themeToggle svg{display:none}
+html[data-theme] body.mobile-app .file-menu>#projectMenu{position:fixed;top:var(--app-header,58px);left:auto;right:8px;min-width:230px;max-width:calc(100vw - 16px)}
+#projectMenu .theme-menu-separator{display:block;border:0;border-top:1px solid var(--ui-line);margin:6px 0}
+}
+.theme-menu-separator{display:none}
+@media(max-width:380px){html[data-theme] body.mobile-app header>.brand{font-size:0;gap:0;justify-self:start}html[data-theme] body.mobile-app header>.brand .mark{font-size:17px}}

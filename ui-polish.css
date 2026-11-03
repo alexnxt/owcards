@@ -1,0 +1,12 @@
+/* Compact spacing without shrinking touch targets. */
+#photoInputRow{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:7px;margin:0 0 4px}
+#photoInputRow .upload{display:flex;align-items:center;justify-content:center;min-height:44px;padding:8px;margin:0;font-size:12px}
+.photo-fit-control{min-width:0}
+#photoInputRow select{width:100%;min-height:44px;margin:0;font-size:13px;padding:8px}
+.photo-fit-control>label,#richEditor>label[for=richTarget],#richPane-text>label[for=fontPickerOpen]{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden;clip-path:inset(50%);white-space:nowrap;padding:0!important;margin:0!important;border:0!important}
+html[data-theme] .text-target-row #deleteSelectedText{position:static;display:flex;flex:0 0 44px;width:44px;height:44px;min-width:44px;min-height:44px;padding:8px;border-radius:8px;box-shadow:none;border-color:var(--ui-line)!important;background:transparent!important}
+.text-target-row #deleteSelectedText[hidden]{display:none!important}
+body.inspector-writing .text-target-row{display:none!important}
+#desktopToolHost .drawer-heading{padding-bottom:6px}
+body.simple-workflow #textResetMenu{margin-top:5px;padding:6px 0}
+@media(max-width:850px){body.mobile-app:not(.inspector-writing) #toolDrawer.auto-compact:not([hidden]){height:auto!important;max-height:var(--preferred-panel-height,42dvh)!important}}

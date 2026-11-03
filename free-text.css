@@ -1,0 +1,4 @@
+.text-target-row{display:flex;align-items:center;gap:6px;min-width:0}
+.text-target-row #richTarget{flex:1;min-width:0;width:auto;margin-bottom:0}
+#addFreeText{display:flex;align-items:center;justify-content:center;flex:0 0 44px;width:44px;height:44px;padding:0}
+html[data-theme] #quickTextDelete{color:var(--ui-accent)!important}

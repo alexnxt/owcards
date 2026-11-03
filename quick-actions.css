@@ -1,0 +1,41 @@
+:root{--quick-glass:rgba(255,255,255,.4);--quick-icon-halo:rgba(255,255,255,.95);--context-dock-height:112px}
+:root[data-theme=dark]{--quick-glass:rgba(35,30,26,.4);--quick-icon-halo:rgba(0,0,0,.95)}
+#contextActionDock{position:fixed;z-index:76;bottom:12px;left:8px;right:12px;margin:0;padding:4px 6px 6px;border:1px solid var(--ui-line);border-radius:12px;background:var(--quick-glass);color:var(--ui-text);box-shadow:0 4px 20px #0002}
+#contextActionDock[hidden]{display:none!important}
+.context-dock-heading{display:flex;align-items:center;gap:8px;min-height:44px;border-bottom:1px solid var(--ui-line);margin-bottom:3px}
+#contextDockName{flex:1;min-width:0;padding-left:6px;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#contextDockHint{font-size:11px;color:var(--ui-muted);white-space:nowrap}
+#contextActionDock button{display:flex;align-items:center;justify-content:center;flex:0 0 48px;min-width:44px;min-height:44px;padding:9px;border:0;border-radius:8px;touch-action:pan-x}
+#contextActionDock button[hidden]{display:none!important}
+#contextActionDock svg{flex-shrink:0;filter:drop-shadow(0 0 1px var(--quick-icon-halo))}
+#contextDockActions{display:flex;align-items:center;gap:4px;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;touch-action:pan-x;scrollbar-width:thin;scrollbar-color:var(--ui-line) transparent;padding:2px 2px 4px}
+#contextDockActions::-webkit-scrollbar{height:4px}
+#contextDockActions::-webkit-scrollbar-thumb{background:var(--ui-line);border-radius:4px}
+#contextActionDock .dock-black svg{stroke-width:2.8}
+html[data-theme] #contextActionDock button{background:transparent!important}
+html[data-theme] #contextActionDock button:hover{background:color-mix(in srgb,var(--ui-hover) 65%,transparent)!important}
+html[data-theme] #contextActionDock button[aria-pressed=true],html[data-theme] #contextDockDone{background:var(--ui-active)!important;color:var(--ui-accent)!important}
+body.context-action-mode #toast{bottom:calc(var(--context-dock-height) + 18px)!important}
+@media(max-width:850px){#contextActionDock{right:8px;bottom:calc(var(--app-nav,76px) + var(--keyboard,0px) + 6px)}body.mobile-app.context-action-mode .stage{bottom:calc(var(--app-nav,76px) + var(--keyboard,0px) + var(--context-dock-height))}body.context-action-mode #toast{bottom:calc(var(--app-nav,76px) + var(--keyboard,0px) + var(--context-dock-height) + 8px)!important}}
+@media(min-width:851px){body.context-action-mode.unified-tools main .stage{height:calc(100dvh - 215px - var(--context-dock-height));min-height:180px}}
+#contextDockActions.dock-primary{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px}
+#contextActionDock button[data-context-type=text]{flex:0 0 64px;flex-direction:column;gap:4px;min-height:60px;padding:5px 3px;white-space:nowrap}
+.dock-action-icon{display:flex;align-items:center;justify-content:center;min-height:24px}
+.dock-action-label{display:block;font-size:11px;line-height:1.25;font-weight:400;text-align:center;white-space:nowrap}
+.dock-glyph{font-size:23px;line-height:24px;letter-spacing:-1px}
+.dock-bold{font-weight:700}.dock-black-glyph{font-weight:900;font-size:22px}.dock-italic{font-family:Georgia,serif;font-style:italic}
+#contextDockSize{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:0 0 96px;gap:1px;min-height:60px}
+#contextDockSize[hidden]{display:none!important}
+.dock-size-buttons{display:flex;align-items:center}
+#contextDockSize button[data-context-type=text]{min-height:44px;flex:0 0 44px;min-width:44px;padding:3px}
+.dock-size-glyph{font-size:17px;font-weight:600;line-height:24px}
+#contextActionDock .context-dock-heading button{flex:0 0 44px;min-height:44px;min-width:44px;padding:8px}
+#contextActionDock .context-dock-heading button[data-context-type=text]{flex-direction:row}
+#contextInspectorBack{display:flex;align-items:center;justify-content:center;flex:0 0 44px;width:44px;min-height:44px;padding:8px}
+#contextInspectorBack[hidden]{display:none!important}
+#richEditor .rich-togglebar button{font-size:17px}
+#richEditor #rich-black{font-weight:900;letter-spacing:-.5px}
+#richEditor #rich-italic{font-family:Georgia,serif;font-style:italic}
+#richEditor #rich-underline{text-decoration:underline;text-underline-offset:3px}
+#richEditor #rich-strike{text-decoration:line-through}
+html[data-theme] #contextActionDock #quickPhotoLock[aria-pressed=true]{background:var(--ui-accent)!important;color:var(--ui-on-accent)!important}

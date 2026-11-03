@@ -1,0 +1,28 @@
+/* Keep selection controls in the existing heading, leaving more room for editing. */
+#toolDrawer .drawer-heading #selectionContext{flex:1;min-width:0;padding:0;border:0;gap:4px}
+body:not(.inspector-writing) #toolDrawer .drawer-heading:has(#selectionContext:not([hidden]))>#toolDrawerName{display:none}
+#selectionName{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#selectionContext #togglePositionLock{margin:0}
+#rich-black{font-weight:900;font-size:12px;letter-spacing:-.4px;min-width:48px}
+.rich-togglebar{gap:4px;flex-wrap:wrap}
+.rich-togglebar button{min-height:44px;padding:8px}
+body.simple-workflow #textWorkflow{margin:7px 0}
+body.simple-workflow .rich-tabs{margin:8px 0}
+body.simple-workflow #textResetMenu{margin-top:8px;padding:8px 0}
+body.inspector-writing .drawer-heading #selectionContext{display:none}
+@media(max-width:850px){
+ body.mobile-app:not(.inspector-writing) #toolDrawer:not([hidden]){padding:8px 14px}
+ body.mobile-app:not(.inspector-writing) #toolDrawer .drawer-heading{gap:6px;min-height:44px;padding:0 0 4px}
+ body.mobile-app:not(.inspector-writing) #drawerResizeHandle{margin-top:-8px;margin-bottom:0}
+ body.mobile-app #touchSliderHint{display:none!important}
+ #toolDrawerContent #richEditor{padding-bottom:0}
+ #toolDrawerContent #richEditor>label[for=richTarget]{margin:5px 0 4px;font-size:12px}
+ #toolDrawerContent #richTarget{padding-top:8px;padding-bottom:8px;min-height:44px;margin-bottom:0}
+ #toolDrawerContent #textWorkflow{margin:6px 0}
+ #toolDrawerContent #textWorkflow button{min-height:44px;padding:8px 5px}
+ #toolDrawerContent .rich-togglebar{margin:6px 0}
+ #toolDrawerContent .rich-label{margin-top:8px;margin-bottom:4px}
+ #toolDrawerContent .font-picker-trigger{padding:8px 74px 8px 10px;gap:2px}
+ #toolDrawerContent .case-buttons button{min-height:44px;padding:6px}
+ #toolDrawerContent #rich-black{min-width:48px}
+}

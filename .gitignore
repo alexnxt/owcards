@@ -1,0 +1,9 @@
+# Local and private working files
+.DS_Store
+Thumbs.db
+Desktop.ini
+node_modules/
+.env
+.env.*
+*.owcards
+*.zip

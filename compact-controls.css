@@ -1,0 +1,70 @@
+/* Compact controls share touch targets and exact-value editing on every screen. */
+.safe-range.precision-range.compact-range{display:block;min-height:44px;margin-bottom:6px}
+.compact-value-row{display:grid;grid-template-columns:44px minmax(58px,1fr) 44px 44px;gap:4px;align-items:center}
+.compact-value-row.compact-axis-row{grid-template-columns:44px minmax(58px,1fr) 44px}
+html[data-theme] .compact-value-row>.precision-step{position:static;grid-area:auto;width:44px;height:44px}
+.compact-value-box{display:block;min-width:0}
+html[data-theme] .compact-value,html[data-theme] .compact-number,html[data-theme] .compact-slider-toggle{display:flex;align-items:center;justify-content:center;min-width:0;min-height:44px;height:44px;margin:0;padding:7px;border-radius:8px;touch-action:pan-y;font:inherit;color:var(--ui-text)}
+html[data-theme] .compact-value-box>.compact-value,html[data-theme] .compact-value-box>.compact-number{width:100%;text-align:center;font-variant-numeric:tabular-nums}
+html[data-theme] .compact-value{font-weight:600;background:var(--ui-raised);border:1px solid var(--ui-line)}
+html[data-theme] .compact-value:hover{border-color:var(--ui-accent)}
+.compact-number{appearance:textfield;box-sizing:border-box}.compact-number::-webkit-inner-spin-button{appearance:none}
+.compact-value-box>[hidden]{display:none!important}
+.compact-range>input[type=range],.compact-range>.range-touch-surface{display:none!important}
+.compact-range.slider-open>input[type=range]{display:block!important;width:100%;height:44px!important;margin:4px 0 0!important}
+.compact-range.slider-open>.range-touch-surface{inset:auto 0 0;height:44px}
+@media(max-width:850px){.compact-range.slider-open>.range-touch-surface{display:block!important}}
+html[data-theme] .compact-slider-toggle[aria-expanded=true]{background:var(--ui-active);border-color:var(--ui-accent)}
+.compact-section,.compact-effect{border-bottom:1px solid var(--ui-line);padding:3px 0;margin:3px 0}
+.compact-section>summary,.compact-effect>summary{min-height:44px;display:flex;align-items:center;gap:8px;cursor:pointer;list-style:none;font-weight:600}
+.compact-section>summary::-webkit-details-marker,.compact-effect>summary::-webkit-details-marker{display:none}
+.compact-section>summary:after,.compact-effect>summary:after{content:'⌄';margin-left:4px;font-size:18px}
+.compact-section[open]>summary:after,.compact-effect[open]>summary:after{transform:rotate(180deg)}
+.compact-effect>summary>label{flex:1;margin:0!important;padding:0;font:inherit;pointer-events:none;color:inherit}
+.compact-effect>summary>label>span,.compact-effect>summary>label>output{display:none}
+.compact-effect>summary>output{margin-left:auto;font-size:13px;font-variant-numeric:tabular-nums;color:var(--ui-muted)}
+.compact-effect>summary:focus-visible,.compact-section>summary:focus-visible{outline:2px solid var(--ui-accent);outline-offset:2px}
+.compact-section>summary{justify-content:space-between}.compact-section .rich-label{margin-top:6px}
+.compact-presets{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;margin:4px 0}
+html[data-theme] .compact-presets>button{min-height:44px;padding:7px 3px;font-size:12px;line-height:1.2;margin:0}
+.compact-presets>button:last-child{grid-column:1/-1}
+.compact-preset-field{margin-bottom:8px}.compact-preset-field>label{margin:6px 0!important}
+html[data-theme] .compact-presets>button[aria-pressed=true]{background:var(--ui-active);border-color:var(--ui-accent);font-weight:700}
+.compact-range[hidden],.compact-effect[hidden],#contextPhotoZoom[hidden]{display:none!important}
+#contextDockSize .dock-size-buttons{gap:0}
+#contextDockSize{flex-basis:138px}
+.rich-label:has(+.compact-range)>output{display:none}
+#contextDockSize .compact-value-box{width:50px;flex:0 0 50px}
+#contextDockSize .compact-value,#contextDockSize .compact-number{font-size:15px;padding:4px;border:0;background:transparent}
+#contextPhotoZoom{display:flex;align-items:center;gap:0;flex:0 0 auto}
+#contextPhotoZoom>.compact-value{width:67px;padding:4px;font-size:14px;border:0;background:transparent}
+#contextPhotoZoom>.compact-value-box{width:67px;flex:0 0 67px}
+#contextPhotoZoom .compact-number{width:100%;font-size:14px}
+@media(min-width:851px){.compact-presets{grid-template-columns:repeat(3,minmax(0,1fr))}}
+/* Frequent visual adjustments keep the track between minus and plus. */
+.safe-range.precision-range.compact-range.direct-slider{display:grid;grid-template-columns:44px minmax(0,1fr) 44px 64px;align-items:center;gap:4px}
+.direct-slider>.compact-value-row{display:contents}
+.direct-slider>.compact-value-row>.step-less{grid-column:1;grid-row:1}
+.direct-slider>.compact-value-row>.step-more{grid-column:3;grid-row:1}
+.direct-slider>.compact-value-row>.compact-value-box{grid-column:4;grid-row:1}
+.compact-range.direct-slider>input[type=range]{display:block!important;grid-column:2;grid-row:1;width:100%;height:44px;margin:0!important;min-width:0}
+.compact-range.direct-slider>.range-touch-surface{left:48px;right:116px;top:0;bottom:0;height:44px}
+html[data-theme] .direct-slider .compact-value{font-size:13px;padding:3px}
+@media(max-width:850px){.compact-range.direct-slider>.range-touch-surface{display:block!important}}
+/* Every adjustment has a caption and track, with arrows for directional axes. */
+.range-source-label{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip-path:inset(50%);white-space:nowrap;margin:0!important;padding:0!important}
+.safe-range.precision-range.compact-range.direct-slider{grid-template-columns:44px minmax(0,1fr) 44px;grid-template-rows:auto 44px;gap:0 5px;margin-bottom:8px}
+.direct-slider>.slider-caption{grid-column:1/-1;grid-row:1;display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:32px;font-size:13px}
+.slider-caption-title{min-width:0;line-height:1.3}
+.direct-slider>.compact-value-row>.step-less{grid-column:1;grid-row:2}
+.direct-slider>.compact-value-row>.step-more{grid-column:3;grid-row:2}
+html[data-theme] .direct-slider>.compact-value-row>.precision-step{grid-row:2}
+.compact-range.direct-slider>input[type=range]{grid-column:2;grid-row:2}
+.compact-range.direct-slider>.range-touch-surface{inset:auto 49px 0;height:44px}
+.slider-caption>.compact-value-box{flex:0 0 68px;min-width:0}
+html[data-theme] .slider-caption .compact-value,html[data-theme] .slider-caption .compact-number{min-height:32px;height:32px;font-size:13px;padding:3px 5px}
+.compact-readout{display:flex;align-items:center;justify-content:center;min-height:44px;font-size:13px;font-variant-numeric:tabular-nums;color:var(--ui-muted);white-space:nowrap;pointer-events:none}
+.slider-caption .compact-readout{min-height:32px;justify-content:flex-end}
+.compact-readout[hidden],.compact-value-box>[hidden]{display:none!important}
+#contextPhotoZoom>.compact-readout{width:67px;flex:0 0 67px}
+.compact-range.position-locked .compact-readout{opacity:.5}
