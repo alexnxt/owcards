@@ -1,0 +1,3 @@
+// Browser tabs and the on-screen keyboard can change the visible height on tablets.
+// Resize the shell without rebuilding controls or resetting the inspector scroll.
+(function(){let frame=0;function fit(){frame=0;let viewport=window.visualViewport;if(viewport&&Math.abs(viewport.scale-1)>.01)return;let height=Math.round(viewport?.height||innerHeight),value=height+'px';if(document.documentElement.style.getPropertyValue('--editor-viewport-height')!==value)document.documentElement.style.setProperty('--editor-viewport-height',value)}function schedule(){if(!frame)frame=requestAnimationFrame(fit)}window.addEventListener('resize',schedule);window.visualViewport?.addEventListener('resize',schedule);fit()})();

@@ -1,0 +1,4 @@
+/* The same orange emblem works on both themes without altering the supplied symbol. */
+html[data-theme] body header .brand .brand-mark{display:block;flex:0 0 46px;width:46px;height:46px;max-width:none;object-fit:contain;padding:0!important;background:transparent!important;border:0;border-radius:0;letter-spacing:normal}
+@media(max-width:850px){html[data-theme] body.mobile-app header .brand .brand-mark{flex-basis:32px;width:32px;height:32px}}
+@media(max-width:380px){html[data-theme] body.mobile-app header .brand .brand-mark{flex-basis:34px;width:34px;height:34px}}

@@ -1,0 +1,17 @@
+/* Wide layouts have one scroll owner: the inspector, never the page behind it. */
+@media(min-width:851px){
+ html:has(body.card-workspace){height:100%;overflow:hidden}
+ body.card-workspace{height:var(--editor-viewport-height,100dvh);min-height:0;overflow:hidden;display:grid;grid-template-rows:auto minmax(0,1fr)}
+ body.card-workspace>header{min-height:0}
+ body.card-workspace>.workspace{height:100%;min-height:0;overflow:hidden;grid-template-rows:minmax(0,1fr)}
+ body.card-workspace.unified-tools aside{height:100%;min-height:0;overflow:hidden}
+ body.card-workspace #desktopToolHost{display:flex;flex-direction:column;min-height:0;overflow:hidden}
+ body.card-workspace #desktopToolHost>#toolDrawer:not([hidden]){flex:1 1 0;min-height:0;height:auto;overflow:hidden}
+ body.card-workspace #desktopToolHost #toolDrawerContent{position:relative;flex:1 1 0;min-height:0;overflow-x:hidden;overflow-y:auto;overscroll-behavior-y:none;-webkit-overflow-scrolling:touch;scrollbar-gutter:stable}
+ body.card-workspace #desktopStart{overflow-y:auto;min-height:0;overscroll-behavior:contain}
+ body.card-workspace.unified-tools main{display:flex;flex-direction:column;height:100%;min-height:0;overflow:hidden;padding-top:20px;padding-bottom:16px}
+ body.card-workspace main>.stage-top{flex:0 0 auto}
+ body.card-workspace.unified-tools main .stage{flex:1 1 0;height:auto!important;min-height:0!important;max-height:100%;padding:clamp(12px,2dvh,28px)}
+ body.card-workspace main .canvas-wrap{min-height:0;min-width:0}
+ body.card-workspace main>.stage-bottom{flex:0 0 auto;margin:10px 0 0}
+}
