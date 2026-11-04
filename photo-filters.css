@@ -1,0 +1,11 @@
+#photoFilterPanel{padding:0;margin:0;border:0;min-width:0}
+#filterPhotoChoices{display:flex;gap:5px;overflow-x:auto;overscroll-behavior-x:contain;touch-action:pan-x;padding:2px 1px 6px;margin-bottom:6px;scrollbar-width:thin}
+#filterPhotoChoices[hidden]{display:none!important}#filterPhotoChoices button{display:flex;flex:0 0 auto;align-items:center;gap:5px;font-size:11px;padding:5px;min-height:40px}#filterPhotoChoices img{width:28px;height:24px;object-fit:cover;border-radius:3px}
+#filterPhotoName{font-size:12px;margin:2px 0 8px;font-weight:600}
+#photoFilterPresets{display:flex;gap:7px;overflow-x:auto;overscroll-behavior-x:contain;touch-action:pan-x;scrollbar-width:thin;scrollbar-color:var(--ui-line) transparent;padding:3px 2px 8px;margin-bottom:9px}
+#photoFilterPresets button{display:flex;flex:0 0 80px;min-width:80px;flex-direction:column;align-items:center;gap:5px;padding:4px;border-radius:8px;font-size:11px}
+#photoFilterPresets canvas{display:block;width:72px;height:54px;object-fit:cover;border-radius:4px;background:var(--ui-raised)}
+html[data-theme] #photoFilterPresets button[aria-pressed=true],html[data-theme] #filterPhotoChoices button[aria-pressed=true]{border-color:var(--ui-accent);background:var(--ui-active);box-shadow:inset 0 0 0 1px var(--ui-accent)}
+#applyFilterAllPhotos{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:44px;padding:9px;margin-top:10px;font-size:12px}
+#photoFilterPanel .panel-help{margin:8px 0 0;font-size:11px;line-height:1.5}
+@media(max-width:850px){#photoFilterPresets button{flex-basis:76px;min-width:76px}#photoFilterPresets canvas{width:68px;height:51px}}

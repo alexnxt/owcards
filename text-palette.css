@@ -1,0 +1,17 @@
+#textColorPalette{margin:0 0 12px;min-width:0}
+.text-color-swatches{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;padding:3px}
+#textColorPalette .text-color-swatches .text-color-swatch{position:relative;display:grid;place-items:center;min-width:0;width:100%;height:38px;min-height:38px;padding:0;border-radius:8px;background:var(--swatch-color)!important;border:1px solid #8888;box-shadow:inset 0 0 0 1px #ffffff30}
+.text-color-swatch .swatch-tick{opacity:0;color:white;font-size:19px;font-weight:800;text-shadow:0 1px 3px #000,1px 0 2px #000,-1px 0 2px #000;line-height:1}
+#textColorPalette .text-color-swatches .text-color-swatch[aria-pressed=true]{outline:2px solid var(--ui-accent);outline-offset:1px}
+.text-color-swatch[aria-pressed=true] .swatch-tick{opacity:1}
+.text-color-swatch:focus-visible{outline:3px solid var(--ui-text);outline-offset:2px}
+#textRecentColors{margin-top:9px}#textRecentColors[hidden]{display:none!important}
+.palette-caption{display:block;font-size:11px;margin:0 0 4px 3px}
+#richPane-color .rich-colors{display:flex;gap:8px;align-items:center;margin:4px 0 12px}
+#richPane-color .text-custom-color{flex:1;margin:0;gap:6px;font-size:12px}
+#richPane-color .text-custom-color input[type=color]{width:44px;height:38px;min-height:38px;margin:0;padding:3px;cursor:pointer}
+.text-color-hex{display:flex;align-items:center;gap:5px;margin:0;font-size:10px}
+.text-color-hex input{width:88px!important;min-width:0;min-height:38px;margin:0!important;padding:6px!important;font:12px ui-monospace,monospace}
+.text-color-hex input[aria-invalid=true]{outline:2px solid #ef4444}
+@media(max-width:850px){.text-color-hex{display:none}#textColorPalette .text-color-swatches .text-color-swatch{height:42px;min-height:42px}.text-color-swatches{gap:7px}}
+
