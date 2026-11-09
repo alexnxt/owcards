@@ -14,7 +14,13 @@
   historyGroup=null;p[key]=p[from];p.textStyles[key]=structuredClone(richStyle(p,from));let pos=currentTextPosition(from);p.textPositions[key]={...pos,y:Math.min(95,pos.y+4)};p.freeTextKeys.push(key);syncTextTargets();selectedText=key;activePhoto=null;$('richTarget').value=key;$('richTarget').dispatchEvent(new Event('change',{bubbles:true}));sync();persist();activatePanel('text');$('richTab-text').click();refresh();
  });
  button(row,'desktopDeleteText','Eliminar','trash',()=>$('deleteSelectedText').click());$('textWorkflow').before(row);
- function refresh(){if(busy)return;busy=true;try{let desktop=!isMobileEditor();document.body.classList.toggle('desktop-inspector',desktop);home.hidden=!desktop||!drawer.hidden;row.hidden=!desktop||mobileTool!=='text'||document.body.classList.contains('inspector-writing');duplicate.disabled=state.pages[state.current].freeTextKeys.length>=12;if(desktop){dock.hidden=true;document.body.classList.remove('context-action-mode');$('contextInspectorBack').hidden=true;}}finally{busy=false}}
+ const collage=button(drawer.querySelector('.drawer-heading'),'desktopPhotoCollage','Collage','collage',()=>openCollageDesigns());
+ const remove=button(drawer.querySelector('.drawer-heading'),'desktopPhotoDelete','Eliminar foto','trash',removeSelectedCollagePhoto);
+ remove.querySelector('span').remove();
+ remove.title='Eliminar foto (Suprimir)';
+ remove.setAttribute('aria-label','Eliminar foto');
+ remove.setAttribute('aria-keyshortcuts','Delete');
+ function refresh(){if(busy)return;busy=true;try{let desktop=!isMobileEditor();document.body.classList.toggle('desktop-inspector',desktop);home.hidden=!desktop||!drawer.hidden;const page=state.pages[state.current];remove.hidden=collage.hidden=!desktop||drawer.hidden||mobileTool!=='photos'||photoToolMode!=='photos'||activePhoto?.page!==page||sources(page).length<2;row.hidden=!desktop||mobileTool!=='text'||document.body.classList.contains('inspector-writing');duplicate.disabled=state.pages[state.current].freeTextKeys.length>=12;if(desktop){dock.hidden=true;document.body.classList.remove('context-action-mode');$('contextInspectorBack').hidden=true;}}finally{busy=false}}
  const up=cv.onpointerup;cv.onpointerup=e=>{up(e);if(!isMobileEditor()){
   if(selectedText&&state.pages[state.current][selectedText]){activatePanel('text');$('richTab-text').click()}
   else if(activePhoto?.page===state.pages[state.current])activatePanel('photos');

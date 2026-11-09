@@ -8,7 +8,13 @@ function hideMobileDrawer(){rememberScroll();restoreToolNodes();drawer.hidden=tr
 openTool=function(name){if(isMobileEditor()&&mobileTool===name){hideMobileDrawer();return}if(!$('mobileSheet').hidden)closeMobileSheet();showSection(name)};closeToolDrawer=hideMobileDrawer;
 activatePanel=function(name){let mapped={images:'photos',text:'text',design:'design'}[name]||name;if(isMobileEditor()&&drag)return;if(mapped==='photos')photoToolMode='photos';showSection(mapped)};
 updateMobileLayout=function(){if(layoutBusy)return;layoutBusy=true;try{mount();oldLayout();let mobile=isMobileEditor();if(mobile!==lastMobile){lastMobile=mobile;markTools()}if(mobile){document.documentElement.style.setProperty('--app-drawer',drawer.hidden?'0px':drawer.getBoundingClientRect().height+'px')}refreshSelection()}finally{layoutBusy=false}};
-function bindTool(b,key,prefix){b.id=prefix+key;b.setAttribute('role','tab');b.setAttribute('aria-controls','toolDrawer');b.onclick=()=>openTool(key);b.onkeydown=e=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();let keys=toolDefinitions.filter(t=>state.mode!=='single'||t[0]!=='pages').map(t=>t[0]),i=keys.indexOf(key),next=e.key==='Home'?0:e.key==='End'?keys.length-1:(i+(e.key==='ArrowRight'?1:keys.length-1))%keys.length;showSection(keys[next]);$(prefix+keys[next]).focus({preventScroll:true})}}
+function bindTool(b,key,prefix){b.id=prefix+key;b.setAttribute('role','tab');b.setAttribute('aria-controls','toolDrawer');b.onclick=()=>{
+  if(key==='photos'&&!sources(state.pages[state.current]).length){
+    $('image').click();
+    return;
+  }
+  openTool(key);
+};b.onkeydown=e=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();let keys=toolDefinitions.filter(t=>state.mode!=='single'||t[0]!=='pages').map(t=>t[0]),i=keys.indexOf(key),next=e.key==='Home'?0:e.key==='End'?keys.length-1:(i+(e.key==='ArrowRight'?1:keys.length-1))%keys.length;showSection(keys[next]);$(prefix+keys[next]).focus({preventScroll:true})}}
 for(let [key,title,path] of toolDefinitions){let b=document.createElement('button');b.type='button';b.dataset.desktopTool=key;b.title=title;b.innerHTML='<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="'+path+'"/></svg><span>'+title+'</span>';bindTool(b,key,'desktopTool-');nav.append(b);bindTool(document.querySelector('[data-mobile-tool="'+key+'"]'),key,'mobileTool-')}
 $('closeToolDrawer').onclick=hideMobileDrawer;$('pagesTab').onclick=()=>showSection('pages');
 // Expose the same precise positioning controls in Text > Align on both devices.

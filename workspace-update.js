@@ -14,7 +14,7 @@
  window.owOpenCarouselSelection=()=>{if(!dialog.open)$('openRecentCards').click();choosing=true;selected=[];paint()};
  new MutationObserver(records=>{if(records.some(r=>[...r.addedNodes].some(n=>n.nodeType===1&&n.matches('.active-card'))))paint()}).observe(grid,{childList:true});dialog.addEventListener('close',()=>{choosing=false;selected=[];paint()});paint();
  // In the mobile photo dock keep only framing, crop and replacement.
- for(let id of ['quickPhotoFit','quickPhotoReset','quickPhotoEffects','quickPhotoCollage'])$(id).classList.add('secondary-photo-action');
+ for(let id of ['quickPhotoFit','quickPhotoReset','quickPhotoEffects'])$(id).classList.add('secondary-photo-action');
  function update(){document.querySelectorAll('[data-desktop-tool=pages],[data-mobile-tool=pages]').forEach(b=>b.hidden=true);$('exportZip').hidden=true;}
  const before=render;render=function(refresh=true){before(refresh);update()};update();
  // Make the project name available without opening Design.
