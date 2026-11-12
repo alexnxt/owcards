@@ -23,7 +23,10 @@
  function refresh(){if(busy)return;busy=true;try{let desktop=!isMobileEditor();document.body.classList.toggle('desktop-inspector',desktop);home.hidden=!desktop||!drawer.hidden;const page=state.pages[state.current];remove.hidden=collage.hidden=!desktop||drawer.hidden||mobileTool!=='photos'||photoToolMode!=='photos'||activePhoto?.page!==page||sources(page).length<2;row.hidden=!desktop||mobileTool!=='text'||document.body.classList.contains('inspector-writing');duplicate.disabled=state.pages[state.current].freeTextKeys.length>=12;if(desktop){dock.hidden=true;document.body.classList.remove('context-action-mode');$('contextInspectorBack').hidden=true;}}finally{busy=false}}
  const up=cv.onpointerup;cv.onpointerup=e=>{up(e);if(!isMobileEditor()){
   if(selectedText&&state.pages[state.current][selectedText]){activatePanel('text');$('richTab-text').click()}
-  else if(activePhoto?.page===state.pages[state.current])activatePanel('photos');
+  else if(activePhoto?.page===state.pages[state.current]){
+   activatePanel('photos');
+   $('imageList').querySelector('.photo-card[aria-current="true"]')?.scrollIntoView({block:'nearest',inline:'nearest'});
+  }
  }refresh()};
  const renderBefore=render;render=function(value=true){renderBefore(value);refresh()};
  new MutationObserver(refresh).observe(drawer,{attributes:true,attributeFilter:['hidden']});

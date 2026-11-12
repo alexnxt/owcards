@@ -33,3 +33,6 @@ body.inspector-writing #desktopToolHost #closeToolDrawer{display:none!important}
  #desktopToolHost:has(>#toolDrawer[hidden]):after{content:'Selecciona un texto o una foto en la tarjeta, o abre una herramienta para ver sus ajustes.';display:block;padding:8px 2px;color:var(--ui-muted);font-size:13px;line-height:1.6}
  body.inspector-writing #desktopToolHost .drawer-heading{padding-bottom:8px}
 }
+
+#tagPresetRow{display:grid;gap:4px;margin:0 0 8px;font-size:12px}
+#tagPresetRow[hidden]{display:none}

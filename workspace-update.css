@@ -19,3 +19,5 @@ body #toolSubnav button{min-width:0;padding:8px 5px;font-size:12px;flex:1}body #
 #signatureLibrary{margin-top:14px;padding-top:12px;border-top:1px solid var(--ui-line)}#signatureLibrary[hidden]{display:none!important}.signature-favorite{display:flex;gap:4px;margin:6px 0}.signature-favorite button{min-height:44px;padding:6px;flex:0 0 38px}.signature-favorite .signature-use{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left;padding:8px}.signature-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.signature-actions button{font-size:12px;min-height:42px;flex:1;padding:8px}
 body #textResetMenu{margin-top:10px;padding:9px 0}body #textWorkflow{margin-bottom:10px}body .panel-help{line-height:1.55}
 @media(max-width:850px){#carouselSelectionTools button{font-size:11px}#recentCardsDialog{padding:16px}.recent-heading{gap:6px}.recent-heading h2{font-size:18px}.composition-grid button{min-height:94px}.visual-choice-grid{gap:7px}.design-section h3{margin-top:5px}body #fontPickerOpen .font-chosen-name{font-size:12px}}
+
+.mini-bottomCenter{align-items:center;justify-content:flex-end}

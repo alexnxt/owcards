@@ -7,7 +7,8 @@ function isEmptyDraft(page){
   if(sources(page).length||page.freeTextKeys?.some(key=>page[key]?.trim()))return false;
   const brand=page.brand.trim();
   if(brand&&brand!==fresh().brand&&brand!==page.initialSignature)return false;
-  const examples=[fresh(),...Object.values(cardDesignExamples)];
+  const defaults=fresh();
+  const examples=[defaults,{...defaults,tag:legacyCardTag},...Object.values(cardDesignExamples)];
   return examples.some(example=>['tag','title','body'].every(key=>{
     const value=page[key].trim();
     return !value||value===example[key].trim();
@@ -23,6 +24,8 @@ create.onclick=()=>{
     next.initialSignature=next.brand.trim();
     state.pages.push(next);
     index=state.pages.length-1;
+  }else if(state.pages[index].tag.trim()===legacyCardTag){
+    state.pages[index].tag=defaultCardTag;
   }
   state.current=index;
   historyGroup=null;

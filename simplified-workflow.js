@@ -37,3 +37,34 @@ function viewportChanged(){let mobile=isMobileEditor();if(mobile!==wasMobile){wa
  clear.addEventListener('pointerdown',e=>e.preventDefault());clear.onclick=()=>{if(!input.value||input.disabled)return;input.focus({preventScroll:true});historyGroup=null;input.value='';input.dispatchEvent(new Event('input',{bubbles:true}));input.dispatchEvent(new Event('change',{bubbles:true}));historyGroup=null;update()};
  input.addEventListener('input',update);$('richTarget').addEventListener('change',update);const before=render;render=function(refresh=true){before(refresh);update()};update();
 })();
+
+// Insert a suggested label through the normal text editing path.
+(function(){
+  const target=$('richTarget'), input=$('richContent');
+  const row=document.createElement('label'), picker=document.createElement('select');
+  row.id='tagPresetRow';
+  row.htmlFor='tagPresetPicker';
+  row.append('Etiqueta predefinida',picker);
+  picker.id='tagPresetPicker';
+  picker.append(new Option('Elegir etiqueta',''));
+  for(const label of [defaultCardTag,'Arte de Fans','Actualización','Evento','Guía','Discusión','Comunidad']){
+    picker.append(new Option(label,label));
+  }
+  input.closest('.text-writing-field').before(row);
+  function update(){
+    row.hidden=target.value!=='tag';
+    picker.disabled=input.disabled;
+  }
+  picker.onchange=()=>{
+    if(target.value!=='tag'||!picker.value||input.disabled)return;
+    historyGroup=null;
+    input.value=picker.value;
+    input.dispatchEvent(new Event('input',{bubbles:true}));
+    picker.value='';
+    historyGroup=null;
+  };
+  target.addEventListener('change',update);
+  const before=render;
+  render=function(refresh=true){before(refresh);update()};
+  update();
+})();
