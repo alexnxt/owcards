@@ -6,7 +6,19 @@ let reset=document.createElement('details');reset.id='textResetMenu';let resetTi
 function choose(key){if(!cardTextKeys(state.pages[state.current]).includes(key))key='title';$('richTarget').value=key;$('richTarget').dispatchEvent(new Event('change',{bubbles:true}));selectedText=key;input.setAttribute('aria-label','Contenido de '+$('richTarget').selectedOptions[0].textContent);refreshSelection()}
 function compact(on){writing=on&&mobileTool==='text'&&!drawer.hidden;document.body.classList.toggle('mobile-writing',writing&&isMobileEditor());document.body.classList.toggle('inspector-writing',writing);if(mobileTool==='text')$('toolDrawerName').textContent=writing?$('richTarget').selectedOptions[0].textContent:'Texto';if(writing){content.scrollTop=0;clearTextGuides()}updateMobileLayout()}
 function showMode(){writePane.hidden=mode!=='write';stylePane.hidden=mode!=='style';$('richPane-layout').hidden=mode!=='position';reset.hidden=mode==='write';nav.querySelectorAll('[data-text-mode]').forEach(b=>{let on=b.dataset.textMode===mode;b.setAttribute('aria-selected',String(on));b.tabIndex=on?0:-1});styleButtons.forEach(b=>{let on=mode==='style'&&b.dataset.richTab===styleTab;b.setAttribute('aria-selected',String(on));b.tabIndex=on?0:-1});for(let name of ['text','color','effects'])$('richPane-'+name).hidden=name!==styleTab;stylePane.setAttribute('aria-labelledby','richTab-'+styleTab)}
-function setMode(next,focus=false){modeScroll.set(mode,content.scrollTop);if(document.activeElement===input&&next!=='write')input.blur();mode=next;showMode();compact(next==='write');content.scrollTop=modeScroll.get(mode)||0;if(focus&&next==='write')input.focus({preventScroll:true})}
+function selectSample(){
+  const key=$('richTarget').value;
+  const isSample=(key==='title'||key==='body')&&[
+    fresh(),...Object.values(cardDesignExamples),
+    {title:'Una nueva\nperspectiva.',body:'Continúa tu historia aquí.'}
+  ].some(example=>example[key]===input.value);
+  if(isSample)input.select();
+}
+input.addEventListener('focus',()=>{if(!isMobileEditor())selectSample()});
+function setMode(next,focus=false){modeScroll.set(mode,content.scrollTop);if(document.activeElement===input&&next!=='write')input.blur();mode=next;showMode();compact(next==='write');content.scrollTop=modeScroll.get(mode)||0;if(focus&&next==='write'){
+  input.focus({preventScroll:true});
+  selectSample();
+}}
 styleButtons=Array.from(styleTabs.querySelectorAll('button'));$('textMode-style').hidden=true;$('textMode-style').tabIndex=-1;for(let b of styleButtons)nav.insertBefore(b,$('textMode-position'));styleTabs.hidden=true;nav.classList.add('single-text-row');
 for(let b of Array.from(nav.children).filter(b=>!b.hidden)){let key=b.dataset.richTab||b.dataset.textMode,icons={write:'write',text:'font',color:'color',effects:'effects',position:'position'},labels={write:'Escribir',text:'Fuente',color:'Color',effects:'Efectos',position:'Posición'};b.innerHTML=editorIcon(icons[key])+'<span>'+labels[key]+'</span>';b.title=labels[key];b.setAttribute('aria-label',labels[key]);b.onclick=()=>{if(b.dataset.richTab){styleTab=b.dataset.richTab;setMode('style')}else setMode(b.dataset.textMode,b.dataset.textMode==='write')};b.onkeydown=e=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();let buttons=Array.from(nav.children).filter(b=>!b.hidden),i=buttons.indexOf(b),next=e.key==='Home'?0:e.key==='End'?buttons.length-1:(i+(e.key==='ArrowRight'?1:buttons.length-1))%buttons.length,target=buttons[next];if(target.dataset.richTab){styleTab=target.dataset.richTab;setMode('style')}else setMode(target.dataset.textMode,false);target.focus({preventScroll:true})}}input.addEventListener('focus',()=>{if(mode==='write')compact(true)});let finish=document.createElement('button');finish.type='button';finish.id='finishTextWriting';finish.textContent='Listo';finish.className='primary';finish.onclick=()=>{input.blur();setMode('style');$('richTab-'+styleTab).focus({preventScroll:true})};drawer.querySelector('.drawer-heading').append(finish);
 const originalOpen=openTool,originalActivate=activatePanel,originalClose=closeToolDrawer;

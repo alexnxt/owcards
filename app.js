@@ -5,10 +5,86 @@ let state={project:'Mi tarjeta',mode:'single',format:'square',pages:[fresh()],cu
 const fields=['tag','title','body','brand','bg','fg','accent','imageFit','font','bodyFont','size','layout','overlay','position','collageStyle','gap','margin','grain','edgeFade','fadeEdges','sideBlur'];
 var undoStack=[],redoStack=[],historyReady=false,lastHistory=null,historyGroup=null;
 const historyAssets=new Map();let nextAsset=1;
-function snapshot(){return JSON.stringify(state,(k,v)=>{if(typeof v==='string'&&v.startsWith('data:image/')){if(!historyAssets.has(v)){let id='asset:'+nextAsset++;historyAssets.set(v,id);historyAssets.set(id,v)}return historyAssets.get(v)}return v})}
-function restoreSnapshot(v){return JSON.parse(v,(k,x)=>typeof x==='string'&&x.startsWith('asset:')?historyAssets.get(x):x)}
-function recordHistory(){if(!historyReady)return;let next=snapshot();if(next===lastHistory)return;let a=document.activeElement,g=a&&['INPUT','TEXTAREA'].includes(a.tagName)?a:null;if(!g||g!==historyGroup){undoStack.push(lastHistory);if(undoStack.length>80)undoStack.shift()}lastHistory=next;historyGroup=g;redoStack=[];updateHistoryButtons()}
-function updateHistoryButtons(){$('undo').disabled=!undoStack.length;$('redo').disabled=!redoStack.length}
+const historyCardIds=new WeakMap();
+let nextHistoryCardId=1;
+function historyCardId(card){
+  if(!historyCardIds.has(card))historyCardIds.set(card,nextHistoryCardId++);
+  return historyCardIds.get(card);
+}
+function keepHistoryCardId(card,replacement){
+  historyCardIds.set(replacement,historyCardId(card));
+  return replacement;
+}
+function snapshot(){return JSON.stringify({...state,cardIds:state.pages.map(historyCardId)},(k,v)=>{if(typeof v==='string'&&v.startsWith('data:image/')){if(!historyAssets.has(v)){let id='asset:'+nextAsset++;historyAssets.set(v,id);historyAssets.set(id,v)}return historyAssets.get(v)}return v})}
+function restoreSnapshot(value){
+  const saved=JSON.parse(value,(key,item)=>typeof item==='string'&&item.startsWith('asset:')?historyAssets.get(item):item);
+  const {cardIds,...project}=saved;
+  project.pages.forEach((card,index)=>{if(cardIds?.[index])historyCardIds.set(card,cardIds[index])});
+  return project;
+}
+function historyFields(before,after,ignored=[]){
+  return [...new Set([...Object.keys(before),...Object.keys(after)])]
+    .filter(key=>!ignored.includes(key)&&JSON.stringify(before[key])!==JSON.stringify(after[key]));
+}
+function describeHistory(before,after){
+  const previous=new Map(before.cardIds.map((id,index)=>[id,before.pages[index]]));
+  const next=new Map(after.cardIds.map((id,index)=>[id,after.pages[index]]));
+  const fields=historyFields(before,after,['pages','current','cardIds']);
+  const reordered=before.cardIds.join(',')!==after.cardIds.join(',');
+  const cards=new Map();
+  for(const id of new Set([...previous.keys(),...next.keys()])){
+    const keys=historyFields(previous.get(id)||{},next.get(id)||{});
+    if(keys.length)cards.set(id,keys);
+  }
+  return {fields,reordered,cards,cardId:!fields.length&&!reordered&&cards.size===1?cards.keys().next().value:null};
+}
+function historyIndex(back,projectOnly=false){
+  const stack=back?undoStack:redoStack;
+  const id=historyCardId(state.pages[state.current]);
+  return stack.findLastIndex(entry=>entry.cardId===null||(!projectOnly&&entry.cardId===id));
+}
+function historyEntry(back,projectOnly=false){
+  return (back?undoStack:redoStack)[historyIndex(back,projectOnly)];
+}
+function recordHistory(){
+  if(!historyReady)return;
+  const next=snapshot();
+  if(next===lastHistory)return;
+  const before=lastHistory, previous=JSON.parse(before), current=JSON.parse(next);
+  const changes=describeHistory(previous,current);
+  lastHistory=next;
+  if(!changes.fields.length&&!changes.reordered&&!changes.cards.size){
+    historyGroup=null;
+    updateHistoryButtons();
+    return;
+  }
+  const active=document.activeElement;
+  const group=changes.cardId!==null&&active&&['INPUT','TEXTAREA'].includes(active.tagName)?active:null;
+  const latest=undoStack.at(-1);
+  if(group&&group===historyGroup&&latest?.cardId===changes.cardId){
+    latest.after=next;
+    const merged=describeHistory(JSON.parse(latest.before),current);
+    latest.cards=merged.cards;
+    if(!merged.cards.size)undoStack.pop();
+  }else{
+    undoStack.push({before,after:next,...changes});
+    if(undoStack.length>80)undoStack.shift();
+  }
+  historyGroup=group;
+  redoStack=changes.cardId===null?[]:redoStack.filter(entry=>entry.cardId!==changes.cardId&&
+    (entry.cardId!==null||(!entry.reordered&&!entry.cards.has(changes.cardId))));
+  updateHistoryButtons();
+}
+function updateHistoryButtons(){
+  $('undo').disabled=!historyEntry(true);
+  $('redo').disabled=!historyEntry(false);
+}
+function applyHistoryFields(target,source,fields){
+  for(const key of fields){
+    if(Object.hasOwn(source,key))target[key]=source[key];
+    else delete target[key];
+  }
+}
 function refreshChoices(){document.querySelectorAll('[data-select]').forEach(b=>b.setAttribute('aria-pressed',String($(b.dataset.select).value===b.dataset.value||
 (b.dataset.select==='collageStyle'&&b.dataset.value==='grid'&&
  collageStyleUnavailable($('collageStyle').value,sources(state.pages[state.current]).length)))))}
@@ -31,7 +107,7 @@ const extraCollageLayouts={"centerStrip":[3,"Franja central"],"coverThree":[4,"P
 function valid(s){return s&&(s.mode===undefined||['single','carousel'].includes(s.mode))&&typeof s.project==='string'&&['square','portrait','story','landscape'].includes(s.format)&&Array.isArray(s.pages)&&s.pages.length>0&&s.pages.length<=30&&s.pages.every(p=>p&&['tag','title','body','brand'].every(k=>typeof p[k]==='string'&&p[k].length<=1000)&&['bg','fg','accent'].every(k=>/^#[a-f\d]{6}$/i.test(p[k]))&&['sans','serif','montserrat','oswald','lora','mono','bebasneue','francoisone','kenyancoffee','heavitas','ddincondensedbold','roboto'].includes(p.font)&&(!p.bodyFont||['sans','serif','montserrat','oswald','lora','mono','bebasneue','francoisone','kenyancoffee','heavitas','ddincondensedbold','roboto'].includes(p.bodyFont))&&['editorial','center','photo','bottomCenter','collage','right','textLeft','textRight'].includes(p.layout)&&(!p.position||['auto','bottom'].includes(p.position))&&(!p.collageStyle||['grid','grid2x3','split','rows','hero','heroRight','heroTop','heroBottom','diagonal',...Object.keys(extraCollageLayouts)].includes(p.collageStyle))&&(!p.images||(Array.isArray(p.images)&&p.images.length<=6&&p.images.every(src=>typeof src==='string'&&/^data:image\/(png|jpeg|webp);base64,/.test(src))))&&(p.gap===undefined||(Number.isFinite(p.gap)&&p.gap>=0&&p.gap<=48))&&(p.margin===undefined||(Number.isFinite(p.margin)&&p.margin>=0&&p.margin<=80))&&(!p.crops||(Array.isArray(p.crops)&&p.crops.length<=6&&p.crops.every(c=>c&&['x','y','zoom'].every(k=>Number.isFinite(c[k]))&&c.x>=0&&c.x<=100&&c.y>=0&&c.y<=100&&c.zoom>=1&&c.zoom<=3&&validCropRegion(c.region)&&validPhotoFilter(c.filter)&&(c.locked===undefined||typeof c.locked==='boolean'))))&&(p.grain===undefined||(Number.isFinite(p.grain)&&p.grain>=0&&p.grain<=100))&&(!p.textPositions||Object.entries(p.textPositions).every(([k,v])=>isTextKey(k)&&v&&['x','y','width'].every(a=>Number.isFinite(v[a]))&&v.x>=0&&v.x<=100&&v.y>=0&&v.y<=100&&v.width>=15&&v.width<=95))&&(p.fillMode===undefined||['auto','custom'].includes(p.fillMode))&&(p.fillColor===undefined||/^#[a-f\d]{6}$/i.test(p.fillColor))&&(!p.imageFit||['cover','contain'].includes(p.imageFit))&&(p.edgeFade===undefined||(Number.isFinite(p.edgeFade)&&p.edgeFade>=0&&p.edgeFade<=100))&&(!p.fadeEdges||['all','top','bottom','vertical','left','right','horizontal'].includes(p.fadeEdges))&&(p.sideBlur===undefined||(Number.isFinite(p.sideBlur)&&p.sideBlur>=0&&p.sideBlur<=40))&&(!p.textLocks||typeof p.textLocks==='object'&&!Array.isArray(p.textLocks)&&Object.entries(p.textLocks).every(([k,v])=>isTextKey(k)&&typeof v==='boolean'))&&validFreeTexts(p)&&validDeletedTexts(p)&&validTextStyles(p.textStyles)&&Number.isFinite(+p.size)&&+p.size>=44&&+p.size<=110&&Number.isFinite(+p.overlay)&&+p.overlay>=0&&+p.overlay<=85&&(!p.image||typeof p.image==='string'&&/^data:image\/(png|jpeg|webp);base64,/.test(p.image)))}
 try{let saved=JSON.parse(localStorage.getItem('owcards-v1'));if(valid(saved))state=saved}catch{}state.current=Math.max(0,Math.min(state.pages.length-1,Number(state.current)||0));
 function persist(){recordHistory();try{localStorage.setItem('owcards-v1',JSON.stringify(state));$('status').textContent='✓ Guardado en este navegador'}catch{$('status').textContent='Guarda una copia del diseño';toast('El almacenamiento está lleno. Usa Guardar diseño para conservar tus cambios.')}}
-function picture(src){if(!src)return null;if(!imageCache.has(src)){let im=new Image();imageCache.set(src,im);im.onload=()=>render(false);im.onerror=()=>toast('No se pudo leer una imagen');im.src=src}let im=imageCache.get(src);return im.complete&&im.naturalWidth?im:null}
+function picture(src){if(!src)return null;if(!imageCache.has(src)){let im=new Image();imageCache.set(src,im);im.onload=()=>{render(false);if(typeof schedulePhotoCacheTrim==='function')schedulePhotoCacheTrim()};im.onerror=()=>toast('No se pudo leer una imagen');im.src=src}let im=imageCache.get(src);imageCache.delete(src);imageCache.set(src,im);return im.complete&&im.naturalWidth?im:null}
 function wrap(ctx,text,max){let result=[];for(let para of text.split('\n')){let line='';for(let word of para.split(' ')){if(ctx.measureText(line+word).width>max&&line){result.push(line.trim());line=''}if(ctx.measureText(word).width>max){for(let ch of word){if(ctx.measureText(line+ch).width>max){result.push(line);line=''}line+=ch}line+=' '}else line+=word+' '}result.push(line.trim())}return result}
 
 function sources(p){return p.images?.length?p.images:p.image?[p.image]:[]}
@@ -136,7 +212,34 @@ $('textTarget').onchange=syncTextControls;for(let [id,key] of [['textX','x'],['t
 let drag=null,cv=$('canvas');function point(e){let r=cv.getBoundingClientRect();return {x:(e.clientX-r.left)*cv.width/r.width,y:(e.clientY-r.top)*cv.height/r.height}}
 cv.onpointerdown=e=>{let pt=point(e),key=textHitKeys(state.pages[state.current]).find(k=>{let b=textBounds[k];return state.pages[state.current][k]&&pt.x>=b.x&&pt.x<=b.x+b.w&&pt.y>=b.y&&pt.y<=b.y+b.h});if(!key)return;let b=textBounds[key];drag={key,dx:pt.x-b.x,dy:pt.y-b.y};$('textTarget').value=key;state.pages[state.current].textPositions[key]={...currentTextPosition(key)};cv.setPointerCapture(e.pointerId);e.preventDefault();syncTextControls()};cv.onpointermove=e=>{if(!drag)return;let pt=point(e),b=textBounds[drag.key],p=state.pages[state.current];p.textPositions[drag.key].x=Math.max(0,Math.min(100,(pt.x-drag.dx)/Math.max(1,cv.width-b.w)*100));p.textPositions[drag.key].y=Math.max(0,Math.min(100,(pt.y-drag.dy)/Math.max(1,cv.height-b.h)*100));if(typeof applyTextSnap==='function')applyTextSnap(drag.key,!!e.altKey);render(false);syncTextControls()};cv.onpointerup=cv.onpointercancel=()=>{if(drag){drag=null;persist()}};syncTextControls();
 
-function travelHistory(back){let from=back?undoStack:redoStack,to=back?redoStack:undoStack;if(!from.length)return;to.push(snapshot());state=restoreSnapshot(from.pop());historyReady=false;sync();persist();lastHistory=snapshot();historyReady=true;historyGroup=null;updateHistoryButtons()}
+function travelHistory(back,projectOnly=false){
+  const from=back?undoStack:redoStack,to=back?redoStack:undoStack;
+  const index=historyIndex(back,projectOnly);
+  if(index<0)return;
+  const entry=from.splice(index,1)[0];
+  const target=restoreSnapshot(back?entry.before:entry.after);
+  const selectedId=historyCardId(state.pages[state.current]);
+  const live=new Map(state.pages.map(card=>[historyCardId(card),card]));
+  const saved=new Map(target.pages.map(card=>[historyCardId(card),card]));
+  for(const [id,fields] of entry.cards){
+    if(live.has(id)&&saved.has(id))applyHistoryFields(live.get(id),saved.get(id),fields);
+  }
+  applyHistoryFields(state,target,entry.fields);
+  if(entry.reordered)state.pages=target.pages.map(card=>live.get(historyCardId(card))||card);
+  const selected=state.pages.findIndex(card=>historyCardId(card)===selectedId);
+  state.current=selected>=0?selected:Math.min(target.current,state.pages.length-1);
+  to.push(entry);
+  historyReady=false;
+  try{
+    sync();
+    persist();
+    lastHistory=snapshot();
+  }finally{
+    historyReady=true;
+    historyGroup=null;
+    updateHistoryButtons();
+  }
+}
 $('undo').onclick=()=>travelHistory(true);$('redo').onclick=()=>travelHistory(false);$('resetAll').onclick=()=>{if(!confirm('¿Empezar un diseño desde cero? Puedes recuperarlo con Deshacer.'))return;let p=fresh();p.tag='';p.title='';p.body='';p.brand='';state={project:'Nuevo diseño',format:'square',pages:[p],current:0};historyGroup=null;sync();persist();toast('Diseño nuevo. Puedes recuperar el anterior con Deshacer.')};
 document.addEventListener?.('keydown',e=>{if(!(e.ctrlKey||e.metaKey)||e.altKey)return;let k=e.key.toLowerCase();if(k==='z'||k==='y'){e.preventDefault();travelHistory(!(k==='y'||e.shiftKey))}});document.addEventListener?.('focusout',()=>historyGroup=null);document.addEventListener?.('change',()=>historyGroup=null);
 

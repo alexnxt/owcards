@@ -21,3 +21,20 @@ body #textResetMenu{margin-top:10px;padding:9px 0}body #textWorkflow{margin-bott
 @media(max-width:850px){#carouselSelectionTools button{font-size:11px}#recentCardsDialog{padding:16px}.recent-heading{gap:6px}.recent-heading h2{font-size:18px}.composition-grid button{min-height:94px}.visual-choice-grid{gap:7px}.design-section h3{margin-top:5px}body #fontPickerOpen .font-chosen-name{font-size:12px}}
 
 .mini-bottomCenter{align-items:center;justify-content:flex-end}
+.composition-mini img{display:none}
+@media(min-width:851px){
+ .format-grid button{min-height:76px;padding:7px;gap:4px}
+ .format-grid .format-symbol{height:27px}
+ .format-grid [data-format-choice=landscape] .format-symbol{width:42px;height:auto}
+ .composition-grid button{justify-content:flex-start;min-height:0;padding:5px;gap:5px}
+ .composition-grid strong{font-size:12px;line-height:1.25;padding:0 2px 2px}
+ .composition-mini{overflow:hidden;height:auto;aspect-ratio:16/10;padding:8px;isolation:isolate}
+ .mini-editorial{justify-content:center;padding-bottom:18%}
+ .composition-mini img:not([hidden]){display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}
+ .composition-mini:has(img:not([hidden]))::before{content:'';position:absolute;inset:0;z-index:-1;background:rgb(0 0 0 / .38)}
+ :is(.mini-photo,.mini-bottomCenter):has(img:not([hidden]))::before{background:linear-gradient(transparent,rgb(0 0 0 / .78))}
+ .mini-textLeft:has(img:not([hidden]))::before{background:linear-gradient(90deg,rgb(0 0 0 / .85),transparent)}
+ .mini-textRight:has(img:not([hidden]))::before{background:linear-gradient(270deg,rgb(0 0 0 / .85),transparent)}
+ :is(.mini-textLeft,.mini-textRight) i{width:46%}
+ :is(.mini-textLeft,.mini-textRight) i:last-child{width:31%}
+}

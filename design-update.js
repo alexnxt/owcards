@@ -7,7 +7,28 @@
  heading(panels.ratio,'Formato de las tarjetas');let formats=document.createElement('div');formats.className='visual-choice-grid format-grid';panels.ratio.append(formats);
  for(let [value,title,ratio,measure]of [['square','Cuadrado','1 / 1','1080 × 1080'],['portrait','Vertical','4 / 5','1080 × 1350'],['story','Historia','9 / 16','1080 × 1920'],['landscape','Horizontal','16 / 9','1920 × 1080']]){let b=document.createElement('button');b.type='button';b.dataset.formatChoice=value;b.innerHTML='<span class="format-symbol" style="aspect-ratio:'+ratio+'"></span><strong>'+title+'</strong><small>'+measure+'</small>';b.onclick=()=>{historyGroup=null;$('format').value=value;$('format').dispatchEvent(new Event('change',{bubbles:true}))};formats.append(b);buttons.push(b)}let note=document.createElement('p');note.className='panel-help';note.textContent='Las tarjetas activas comparten formato para combinarlas en un carrusel.';panels.ratio.append(note);
  heading(panels.composition,'Distribución del texto');let layouts=document.createElement('div');layouts.className='visual-choice-grid composition-grid';panels.composition.append(layouts);
- for(let [value,title]of [['editorial','Libre'],['photo','Abajo a la izquierda'],['bottomCenter','Abajo al centro'],['center','Centrado'],['textLeft','Izquierda'],['textRight','Derecha']]){let b=document.createElement('button');b.type='button';b.dataset.compositionChoice=value;b.innerHTML='<span class="composition-mini mini-'+value+'"><i></i><i></i><i></i></span><strong>'+title+'</strong>';b.onclick=()=>{historyGroup=null;$('layout').value=value;$('layout').dispatchEvent(new Event('input',{bubbles:true}));sync()};layouts.append(b);buttons.push(b)}let help=document.createElement('p');help.className='panel-help';help.textContent='Conserva tus fotos y la distribución del collage. Los textos con posición bloqueada se mantienen.';panels.composition.append(help);
+ const previews=[];
+ for(const [value,title] of [['editorial','Libre'],['photo','Abajo a la izquierda'],['bottomCenter','Abajo al centro'],['center','Centrado'],['textLeft','Izquierda'],['textRight','Derecha']]){
+  const button=document.createElement('button');
+  button.type='button';
+  button.dataset.compositionChoice=value;
+  button.innerHTML='<span class="composition-mini mini-'+value+'" aria-hidden="true"><i></i><i></i><i></i></span><strong>'+title+'</strong>';
+  const thumbnail=document.createElement('img');
+  thumbnail.alt='';
+  thumbnail.hidden=true;
+  button.firstElementChild.prepend(thumbnail);
+  previews.push(thumbnail);
+  button.onclick=()=>{
+   const page=state.pages[state.current];
+   if(page.layout===value)return;
+   historyGroup=null;
+   $('layout').value=value;
+   $('layout').dispatchEvent(new Event('input',{bubbles:true}));
+   sync();
+  };
+  layouts.append(button);
+  buttons.push(button);
+ }
  heading(panels.background,'Tu estilo');let actions=document.createElement('div');actions.className='design-style-actions';panels.background.append(actions);
  for(let [id,title,tab]of [['designPresets','Prediseños','presets'],['designMine','Mis diseños','mine'],['designSaveCurrent','Guardar mi diseño','mine']]){let b=document.createElement('button');b.id=id;b.type='button';b.innerHTML=editorIcon(id==='designSaveCurrent'?'pages':'design')+'<span>'+title+'</span>';b.onclick=()=>{$('openDesignLibrary').click();document.querySelector('[data-design-tab="'+tab+'"]').click();if(id==='designSaveCurrent')$('designSaveName').focus()};actions.append(b)}
  heading(panels.background,'Paletas');let palette=document.querySelector('.palettes');panels.background.append(palette);heading(panels.background,'Colores personalizados');let colors=document.querySelector('#designPanel .colorrow');panels.background.append(colors);
@@ -15,7 +36,25 @@
  for(let [value,text]of [['left','Solo izquierda'],['right','Solo derecha'],['horizontal','Izquierda y derecha']]){let option=document.createElement('option');option.value=value;option.textContent=text;$('fadeEdges').append(option)}
  let edge=$('effectControl-edgeFade'),side=$('effectControl-sideBlur');edge.open=true;side.open=true;edge.classList.add('always-open-blur');side.classList.add('always-open-blur');edge.querySelector('summary label').textContent='Suavizar bordes de la foto';side.querySelector('summary label').textContent='Difuminar detrás del texto';
  let effectsTitle=document.createElement('h3');effectsTitle.textContent='Difuminar';effectsTitle.id='blurHeading';$('imagesPanel').append(effectsTitle);const nodes=toolNodes;toolNodes=function(name){return name==='effects'?[effectsTitle,edge,side,...nodes(name).filter(n=>n!==edge&&n!==side)]:nodes(name)};
- function update(){for(let b of buttons)b.setAttribute('aria-pressed',String(b.dataset.formatChoice?b.dataset.formatChoice===state.format:b.dataset.compositionChoice===(state.pages[state.current].layout==='collage'?'editorial':state.pages[state.current].layout)));edge.open=true;side.open=true;}
+ let previewSource;
+ function update(){
+  const page=state.pages[state.current];
+  for(const button of buttons)button.setAttribute('aria-pressed',String(button.dataset.formatChoice?button.dataset.formatChoice===state.format:button.dataset.compositionChoice===(page.layout==='collage'?'editorial':page.layout)));
+  if(!isMobileEditor()&&layouts.getClientRects().length){
+   const source=sources(page)[0]||'';
+   if(source!==previewSource){
+    previewSource=source;
+    for(const thumbnail of previews){
+     thumbnail.hidden=!source;
+     if(source)thumbnail.src=source;
+     else thumbnail.removeAttribute('src');
+    }
+   }
+  }
+  edge.open=true;
+  side.open=true;
+ }
+ window.addEventListener('resize',update);
  const before=render;render=function(refresh=true){before(refresh);update()};update();
  // Compact single-line font preview, retaining the same accessible picker.
  $('fontPickerOpen').querySelector('.font-change-hint').textContent='▾';

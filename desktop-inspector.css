@@ -1,6 +1,21 @@
 #desktopStart[hidden],#desktopTextActions[hidden]{display:none!important}
 @media(max-width:850px){#desktopStart,#desktopTextActions{display:none!important}}
+.desktop-text-chip,#desktopFreeTexts{display:none}
 @media(min-width:851px){
+ body.desktop-inspector #textAddMenuRow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) 34px;gap:3px;margin:8px 0}
+ body.desktop-inspector #textAddMenuRow :is(.desktop-text-chip,#addFreeText){display:grid;place-items:center;min-height:38px;min-width:0;padding:3px 1px;font-size:12px}
+ body.desktop-inspector #textAddMenuRow .desktop-text-chip[hidden]{display:none}
+ body.desktop-inspector #textAddMenuRow .desktop-text-chip[aria-pressed=true]{background:var(--ui-active);border-color:var(--ui-accent);color:var(--ui-accent);font-weight:650}
+ body.desktop-inspector #textAddMenuRow #addFreeText{grid-column:5;font-size:0}
+ body.desktop-inspector #textAddMenuRow #addFreeText::before{content:'+';font-size:21px}
+ body.desktop-inspector #textAddMenuRow #addFreeText>*{display:none}
+ body.desktop-inspector #desktopFreeTexts:not([hidden]){display:block;margin:6px 0}
+ body.desktop-inspector #desktopEditText{display:none}
+ body.desktop-inspector #textWorkflow #textMode-style:not([hidden]){display:flex;align-items:center;justify-content:center}
+ body.desktop-inspector #textStylePane>.rich-tabs:not([hidden]){display:flex;margin:0 0 7px}
+ body.desktop-inspector #textStylePane>.rich-tabs button{display:flex;align-items:center;justify-content:center;gap:4px;padding:4px;min-width:0;font-size:12px}
+ body.desktop-inspector #textStylePane>.rich-tabs svg{width:16px;height:16px;flex-shrink:0}
+ body.desktop-inspector #richPane-text #textPresetColors{margin:8px 0}
  #desktopToolHost:has(>#toolDrawer[hidden]):after{display:none}
  body.desktop-inspector #contextActionDock{display:none!important}
  body.desktop-inspector.context-action-mode.unified-tools main .stage{height:calc(100dvh - 215px)}

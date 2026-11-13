@@ -17,7 +17,8 @@
  function commitFilters(crop,list,grouped=false){
   if(!grouped)historyGroup=null;
   writeFilters(crop,list);
-  render(false);
+  if(grouped)queueFilterPreview();
+  else render(false);
   persist();
  }
  function selectPreset(preset){

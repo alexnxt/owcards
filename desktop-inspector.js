@@ -42,3 +42,91 @@
  new MutationObserver(()=>{if(!isMobileEditor()&&!dock.hidden)dock.hidden=true}).observe(dock,{attributes:true,attributeFilter:['hidden']});
  window.addEventListener('resize',refresh);document.addEventListener('click',()=>queueMicrotask(refresh));refresh();
 })();
+
+// Keep the desktop text picker and style controls bound to the shared editor.
+document.addEventListener('DOMContentLoaded',()=>{
+ const target=$('richTarget'),add=$('addFreeText'),picker=$('textAddMenuRow');
+ const write=$('textWritePane'),workflow=$('textWorkflow'),style=$('textMode-style');
+ const styleTabs=$('textStylePane').querySelector('.rich-tabs');
+ const styleButtons=Array.from(workflow.querySelectorAll('[data-rich-tab]'));
+ const position=$('textMode-position');
+ const preset=$('textPresetColors');
+ const colorsHome=preset.parentElement;
+ const buttons=new Map();
+ picker.setAttribute('role','group');
+ picker.setAttribute('aria-label','Bloques de texto');
+ function select(key){
+  target.value=key;
+  target.dispatchEvent(new Event('change',{bubbles:true}));
+ }
+ for(const [key,label] of [['title','Titular'],['body','Apoyo'],['tag','Etiqueta'],['brand','Marca']]){
+  const chip=document.createElement('button');
+  chip.type='button';
+  chip.className='desktop-text-chip';
+  chip.textContent=label;
+  chip.onclick=()=>select(key);
+  picker.insertBefore(chip,add);
+  buttons.set(key,chip);
+ }
+ const free=document.createElement('select');
+ free.id='desktopFreeTexts';
+ free.setAttribute('aria-label','Textos libres');
+ free.onchange=()=>{if(free.value)select(free.value)};
+ picker.after(free);
+ function syncPicker(){
+  const page=state.pages[state.current];
+  for(const [key,chip] of buttons){
+   chip.hidden=!page[key]?.trim()&&target.value!==key;
+   chip.setAttribute('aria-pressed',String(target.value===key));
+  }
+  const keys=page.freeTextKeys;
+  if(free.options.length!==keys.length+1||keys.some((key,i)=>free.options[i+1].value!==key)){
+   free.replaceChildren(new Option('Textos libres',''),...keys.map(key=>new Option(textName(key),key)));
+  }
+  free.hidden=!keys.length;
+  free.value=keys.includes(target.value)?target.value:'';
+ }
+ function navigate(event,items){
+  if(isMobileEditor()||!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
+  event.preventDefault();
+  event.stopImmediatePropagation();
+  const index=items.indexOf(event.currentTarget);
+  const next=event.key==='Home'?0:event.key==='End'?items.length-1:(index+(event.key==='ArrowRight'?1:items.length-1))%items.length;
+  items[next].click();
+  items[next].focus({preventScroll:true});
+ }
+ for(const button of [style,position])button.addEventListener('keydown',event=>navigate(event,[style,position]),true);
+ for(const button of styleButtons)button.addEventListener('keydown',event=>navigate(event,styleButtons),true);
+ const updateModes=()=>{
+  if(isMobileEditor())return;
+  const on=position.getAttribute('aria-selected')!=='true';
+  style.setAttribute('aria-selected',String(on));
+  style.tabIndex=on?0:-1;
+ };
+ style.addEventListener('click',updateModes);
+ for(const button of [position,...styleButtons])button.addEventListener('click',updateModes);
+ let wasMobile;
+ function layout(){
+  const mobile=isMobileEditor();
+  if(mobile===wasMobile)return;
+  wasMobile=mobile;
+  style.hidden=mobile;
+  styleTabs.hidden=mobile;
+  if(mobile){
+   workflow.after(write);
+   for(const button of styleButtons)workflow.insertBefore(button,position);
+   colorsHome.prepend(preset);
+  }else{
+   workflow.before(write);
+   styleTabs.append(...styleButtons);
+   $('typographyQuickRow').after(preset);
+  }
+  updateModes();
+ }
+ const before=render;
+ render=function(refresh=true){before(refresh);syncPicker();updateModes()};
+ target.addEventListener('change',syncPicker);
+ window.addEventListener('resize',layout);
+ layout();
+ syncPicker();
+});

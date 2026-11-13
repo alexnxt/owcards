@@ -12,9 +12,9 @@ function removePhoto(page,index){
   window.owSelectionCleared=true;
   sync();
   persist();
-  const deletion=lastHistory, depth=undoStack.length;
+  const deletion=historyEntry(true);
   toast('Foto eliminada.',{label:'Deshacer',run:()=>{
-    if(lastHistory===deletion&&undoStack.length===depth)travelHistory(true);
+    if(deletion&&historyEntry(true)===deletion)travelHistory(true);
     else toast('Usa Deshacer en la barra para retroceder desde el último cambio.');
   }});
 }
