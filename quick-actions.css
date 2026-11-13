@@ -18,7 +18,7 @@ html[data-theme] #contextActionDock button[aria-pressed=true],html[data-theme] #
 body.context-action-mode #toast{bottom:calc(var(--context-dock-height) + 18px)!important}
 @media(max-width:850px){#contextActionDock{right:8px;bottom:calc(var(--app-nav,76px) + var(--keyboard,0px) + 6px)}body.mobile-app.context-action-mode .stage{bottom:calc(var(--app-nav,76px) + var(--keyboard,0px) + var(--context-dock-height))}body.context-action-mode #toast{bottom:calc(var(--app-nav,76px) + var(--keyboard,0px) + var(--context-dock-height) + 8px)!important}}
 @media(min-width:851px){body.context-action-mode.unified-tools main .stage{height:calc(100dvh - 215px - var(--context-dock-height));min-height:180px}}
-#contextDockActions.dock-primary{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px}
+#contextDockActions.dock-primary{display:grid;grid-template-columns:repeat(6,minmax(44px,1fr));gap:3px}
 #contextActionDock button[data-context-type=text]{flex:0 0 64px;flex-direction:column;gap:4px;min-height:60px;padding:5px 3px;white-space:nowrap}
 .dock-action-icon{display:flex;align-items:center;justify-content:center;min-height:24px}
 .dock-action-label{display:block;font-size:11px;line-height:1.25;font-weight:400;text-align:center;white-space:nowrap}
@@ -39,3 +39,8 @@ body.context-action-mode #toast{bottom:calc(var(--context-dock-height) + 18px)!i
 #richEditor #rich-underline{text-decoration:underline;text-underline-offset:3px}
 #richEditor #rich-strike{text-decoration:line-through}
 html[data-theme] #contextActionDock #quickPhotoLock[aria-pressed=true]{background:var(--ui-accent)!important;color:var(--ui-on-accent)!important}
+
+#contextActionDock #contextDockActions.dock-primary button{min-height:44px;padding:3px;flex-direction:row;gap:3px}
+#desktopPhotoFilters{display:grid;place-items:center;min-width:40px;min-height:40px;padding:6px}
+#desktopPhotoFilters[hidden]{display:none}
+@media(max-width:400px){#desktopPhotoFilters svg{width:18px;height:18px}}

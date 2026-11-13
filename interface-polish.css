@@ -15,3 +15,9 @@ body #typographyQuickRow button{flex:0 0 40px;min-width:40px;width:40px;min-heig
 .card-close:disabled{opacity:.4}.library-history{display:flex;gap:4px;margin-left:auto}.library-history button{display:flex;align-items:center;justify-content:center;width:40px;height:40px;padding:8px}
 #recentCardsDialog .recent-card-preview{padding-top:12px}#recentCardsDialog .recent-card-preview img{padding:8px 16px 0;box-sizing:border-box}
 @media(min-width:851px){body.project-single aside #newSingleCard{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:44px;margin:0 0 14px;font-weight:650}body aside #newSingleCard[hidden]{display:none!important}body aside #newSingleCard svg{width:20px;height:20px}}
+
+@media(min-width:851px){
+ #typographyQuickRow{flex-direction:column;align-items:stretch;overflow:visible;touch-action:auto}
+ #typographyQuickRow .rich-togglebar,#typographyQuickRow .case-buttons{flex-wrap:wrap;white-space:normal}
+ #typographyQuickRow .case-buttons{border-left:0;padding-left:0}
+}

@@ -1,5 +1,6 @@
 // Shared artwork keeps the same action recognizable across the editor.
 const editorIconPaths={
+ filters:'M3 6h18M3 12h18M3 18h18M8 3v6m8 0v6m-8 0v6',
  crop:'M6 3v13a2 2 0 0 0 2 2h13M3 6h13a2 2 0 0 1 2 2v13',
  frame:'M7 3H3v4m14-4h4v4M3 17v4h4m10 0h4v-4M7 7h10v10H7zM7 14l3-3 3 3 2-2 2 2',
  replace:'M4 4h12v12H4zM4 13l4-4 4 4 2-2 2 2M14 19h7m-2-2 2 2-2 2M21 14h-7m2-2-2 2 2 2',

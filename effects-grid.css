@@ -27,3 +27,8 @@ html[data-theme] #effectsGridPanel .precision-step{width:32px;min-width:32px;hei
  html[data-theme] #effectsGridPanel .precision-step{width:40px;min-width:40px}
  #effectsGridPanel .compact-range.direct-slider>.range-touch-surface{inset:0 45px}
 }
+
+@media(min-width:851px){
+ #effectEdgeChoices{display:grid;grid-template-columns:repeat(auto-fit,minmax(52px,1fr));overflow:visible}
+ #effectEdgeChoices button{min-width:0;white-space:normal}
+}

@@ -9,3 +9,23 @@ html[data-theme] #photoFilterPresets button[aria-pressed=true],html[data-theme] 
 #applyFilterAllPhotos{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:44px;padding:9px;margin-top:10px;font-size:12px}
 #photoFilterPanel .panel-help{margin:8px 0 0;font-size:11px;line-height:1.5}
 @media(max-width:850px){#photoFilterPresets button{flex-basis:76px;min-width:76px}#photoFilterPresets canvas{width:68px;height:51px}}
+
+#comparePhotoEnhance{width:100%;min-height:44px;margin-top:8px}
+#photoEnhanceDialog{width:min(94vw,1120px);max-height:90dvh;padding:14px;box-sizing:border-box}
+.photo-compare-bar,.photo-compare-bar>div{display:flex;align-items:center;gap:6px}
+.photo-compare-bar{justify-content:space-between}
+.photo-compare-bar button{min-height:42px}
+.photo-compare-scroll{max-height:calc(90dvh - 125px);overflow:auto;overscroll-behavior:contain}
+.photo-compare-scroll canvas{display:block;max-width:none;max-height:none;width:auto;height:auto}
+
+#photoFilterStack{padding:0;list-style:none;margin:6px 0}
+#photoFilterStack li{display:grid;grid-template-columns:minmax(0,1fr) 44px;gap:5px;margin-bottom:4px}
+#photoFilterStack button{min-height:44px}
+#addPhotoFilter{min-height:44px;width:100%}
+#addPhotoFilter[hidden],#photoFilterStack[hidden]{display:none}
+@media(min-width:851px){
+ #filterPhotoChoices{flex-wrap:wrap;overflow:visible}
+ #photoFilterPresets{display:grid;grid-template-columns:repeat(auto-fit,minmax(70px,1fr));overflow:visible}
+ #photoFilterPresets button{min-width:0}
+ #photoFilterPresets canvas{width:100%;height:auto;aspect-ratio:4/3}
+}

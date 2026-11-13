@@ -99,7 +99,28 @@ function add(copy){if(state.pages.length>=30)return toast('Puedes crear hasta 30
 $('add').onclick=()=>add(false);$('duplicate').onclick=()=>add(true);$('delete').onclick=()=>{if(state.pages.length<=1)return;state.pages.splice(state.current,1);state.current=Math.min(state.current,state.pages.length-1);sync();persist()};function move(d){let a=state.current,b=a+d;if(b<0||b>=state.pages.length)return;[state.pages[a],state.pages[b]]=[state.pages[b],state.pages[a]];state.current=b;sync();persist()}$('left').onclick=()=>move(-1);$('right').onclick=()=>move(1);$('pagesTab').onclick=()=>$('pages').scrollIntoView({behavior:'smooth',block:'center'});$('editTab').onclick=()=>$('title').focus();
 
 for(let k of ['bodyBold','bodyItalic','bodyUpper'])$(k).onclick=()=>{let p=state.pages[state.current];p[k]=!p[k];sync();persist()};
-$('image').onchange=async e=>{let files=Array.from(e.target.files),target=state.pages[state.current];normalize(target);const previousCount=target.images.length;let room=6-previousCount;if(!room){e.target.value='';return toast('Máximo 6 imágenes. Quita una para añadir otra.')}if(files.length>room)toast('Se añadirán las primeras '+room+' imágenes.');for(let file of files.slice(0,room)){if(target.images.length>=6)break;if(!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size>20*1024*1024){toast('Usa PNG, JPG o WebP de menos de 20 MB.');continue}try{let bitmap=await createImageBitmap(file),scale=Math.min(1,1920/Math.max(bitmap.width,bitmap.height)),cv=document.createElement('canvas');cv.width=Math.round(bitmap.width*scale);cv.height=Math.round(bitmap.height*scale);cv.getContext('2d').drawImage(bitmap,0,0,cv.width,cv.height);target.images.push(cv.toDataURL('image/jpeg',.88));bitmap.close()}catch{toast('No se pudo abrir una imagen.')}}target.image=target.images[0]||null;sync();persist();e.target.value='';
+async function preparePhoto(file){
+  const bitmap=await createImageBitmap(file);
+  try{
+    const longestSide=Math.max(bitmap.width,bitmap.height);
+    if(longestSide<=1920){
+      return await new Promise((resolve,reject)=>{
+        const reader=new FileReader();
+        reader.onload=()=>resolve(reader.result);
+        reader.onerror=()=>reject(reader.error);
+        reader.readAsDataURL(file);
+      });
+    }
+    const scale=1920/longestSide, canvas=document.createElement('canvas');
+    canvas.width=Math.max(1,Math.round(bitmap.width*scale));
+    canvas.height=Math.max(1,Math.round(bitmap.height*scale));
+    const context=canvas.getContext('2d');
+    context.imageSmoothingQuality='high';
+    context.drawImage(bitmap,0,0,canvas.width,canvas.height);
+    return canvas.toDataURL(file.type,.94);
+  }finally{bitmap.close()}
+}
+$('image').onchange=async e=>{let files=Array.from(e.target.files),target=state.pages[state.current];normalize(target);const previousCount=target.images.length;let room=6-previousCount;if(!room){e.target.value='';return toast('Máximo 6 imágenes. Quita una para añadir otra.')}if(files.length>room)toast('Se añadirán las primeras '+room+' imágenes.');for(let file of files.slice(0,room)){if(target.images.length>=6)break;if(!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size>20*1024*1024){toast('Usa PNG, JPG o WebP de menos de 20 MB.');continue}try{const src=await preparePhoto(file);if(state.pages.includes(target)&&target.images.length<6)target.images.push(src)}catch{toast('No se pudo abrir una imagen.')}}target.image=target.images[0]||null;sync();persist();e.target.value='';
 if(previousCount<2&&target.images.length>=2&&target===state.pages[state.current]){
   toast('Ya puedes crear un collage.',{label:'Ver diseños',run:()=>openCollageDesigns(target)});
 }

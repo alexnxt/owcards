@@ -15,12 +15,21 @@
  });
  button(row,'desktopDeleteText','Eliminar','trash',()=>$('deleteSelectedText').click());$('textWorkflow').before(row);
  const collage=button(drawer.querySelector('.drawer-heading'),'desktopPhotoCollage','Collage','collage',()=>openCollageDesigns());
+ editorIconPaths.swap='M3 7h17m-4-4 4 4-4 4M21 17H4m4-4-4 4 4 4';
+ const exchange=button(drawer.querySelector('.drawer-heading'),'desktopPhotoSwap','Intercambiar fotos','swap',()=>startPhotoSwap());
+ exchange.querySelector('span').remove();
+ exchange.title='Intercambiar fotos';
+ exchange.setAttribute('aria-label','Intercambiar fotos');
+ const filters=button(drawer.querySelector('.drawer-heading'),'desktopPhotoFilters','Filtros de la foto','filters',openSelectedPhotoFilters);
+ filters.querySelector('span').remove();
+ filters.title='Filtros de la foto';
+ filters.setAttribute('aria-label',filters.title);
  const remove=button(drawer.querySelector('.drawer-heading'),'desktopPhotoDelete','Eliminar foto','trash',removeSelectedCollagePhoto);
  remove.querySelector('span').remove();
  remove.title='Eliminar foto (Suprimir)';
  remove.setAttribute('aria-label','Eliminar foto');
  remove.setAttribute('aria-keyshortcuts','Delete');
- function refresh(){if(busy)return;busy=true;try{let desktop=!isMobileEditor();document.body.classList.toggle('desktop-inspector',desktop);home.hidden=!desktop||!drawer.hidden;const page=state.pages[state.current];remove.hidden=collage.hidden=!desktop||drawer.hidden||mobileTool!=='photos'||photoToolMode!=='photos'||activePhoto?.page!==page||sources(page).length<2;row.hidden=!desktop||mobileTool!=='text'||document.body.classList.contains('inspector-writing');duplicate.disabled=state.pages[state.current].freeTextKeys.length>=12;if(desktop){dock.hidden=true;document.body.classList.remove('context-action-mode');$('contextInspectorBack').hidden=true;}}finally{busy=false}}
+ function refresh(){if(busy)return;busy=true;try{let desktop=!isMobileEditor();document.body.classList.toggle('desktop-inspector',desktop);home.hidden=!desktop||!drawer.hidden;const page=state.pages[state.current];filters.hidden=!desktop||drawer.hidden||mobileTool!=='photos'||photoToolMode!=='photos'||activePhoto?.page!==page||!sources(page)[activePhoto.index];exchange.hidden=remove.hidden=collage.hidden=filters.hidden||sources(page).length<2;row.hidden=!desktop||mobileTool!=='text'||document.body.classList.contains('inspector-writing');duplicate.disabled=state.pages[state.current].freeTextKeys.length>=12;if(desktop){dock.hidden=true;document.body.classList.remove('context-action-mode');$('contextInspectorBack').hidden=true;}}finally{busy=false}}
  const up=cv.onpointerup;cv.onpointerup=e=>{up(e);if(!isMobileEditor()){
   if(selectedText&&state.pages[state.current][selectedText]){activatePanel('text');$('richTab-text').click()}
   else if(activePhoto?.page===state.pages[state.current]){

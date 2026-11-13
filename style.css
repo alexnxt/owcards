@@ -26,9 +26,9 @@
 .unified-tools aside>.sidebar-heading,.unified-tools main>.filmstrip-head,.unified-tools main>#pages,.unified-tools main>.footer-note{display:none!important}
 @font-face{font-family:OWBebasNeue;src:url(fonts/bebas-neue.ttf) format('truetype');font-weight:400;font-style:normal;font-display:swap}@font-face{font-family:OWFrancoisOne;src:url(fonts/francois-one.ttf) format('truetype');font-weight:400;font-style:normal;font-display:swap}.font-picker-trigger{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:5px;width:100%;padding:12px 78px 12px 12px;text-align:left;background:#fdfbf9;border-color:#eedacb}.font-chosen-name{font-family:'Segoe UI',Arial,sans-serif;font-size:12px;color:#7b6d63}.font-chosen-sample{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:24px;line-height:1.3;color:#4f3420}.font-change-hint{position:absolute;right:10px;top:15px;font:11px 'Segoe UI',Arial,sans-serif;color:#905f3a}#fontPickerDialog{border:0;border-radius:16px;padding:20px;width:min(94vw,500px);max-height:92dvh;overflow:hidden;box-shadow:0 20px 70px #2e1f1340;color:#4d321e}#fontPickerDialog[open]{display:flex;flex-direction:column;gap:9px}#fontPickerDialog::backdrop{background:#281a1099}#fontPickerTitle{font-size:19px;margin:0}#fontPickerContext{font-size:13px;color:#887a6f;margin:0}.font-preview-area{background:#f7eee8;border:1px solid #eedbcc;border-radius:10px;padding:14px;margin-top:3px;flex-shrink:0}#fontPreviewName{font-size:11px;color:#907764}#fontPreviewSample{font-size:32px;line-height:1.25;margin-top:5px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;overflow-wrap:anywhere}#fontPickerStatus{font-size:12px;line-height:1.5;color:#897c72;margin:0;flex-shrink:0}#fontPickerList{max-height:38dvh;overflow:auto;overscroll-behavior:contain;min-height:70px;padding:2px 4px 2px 2px}.font-preview-option{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:6px;width:100%;padding:10px 34px 10px 12px;margin-bottom:7px;text-align:left;border-color:#f1e1d4;background:white}.font-preview-option[aria-checked=true]{border-color:#9f7e65;background:#f8efe9;box-shadow:inset 0 0 0 1px #9f7e65}.font-preview-option[aria-checked=true]:after{content:'✓';position:absolute;right:12px;top:12px;color:#734c2e}.font-option-name{font:11px 'Segoe UI',Arial,sans-serif;color:#8a7b70}.font-option-sample{font-size:25px;line-height:1.25;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.font-picker-actions{display:flex;justify-content:flex-end;gap:8px;padding-top:5px;flex-shrink:0}.font-picker-actions button{font-size:13px;min-height:40px}body.mobile-app #fontPickerDialog{z-index:140}@media(max-width:500px){#fontPickerDialog{padding:17px;max-height:92dvh}#fontPickerList{max-height:35dvh}.font-picker-actions button{flex:1}#fontPreviewSample{font-size:30px}}
 
-.collage-grid-label{display:block;margin-top:4px;font-size:10px;line-height:1.2}
+.collage-grid-label{display:block;max-width:100%;margin-top:4px;font-size:10px;line-height:1.2;white-space:normal;overflow-wrap:anywhere;text-align:center}
 
-#collageChoices{display:block}
+#toolDrawer #collageChoices{display:block;min-width:0;width:100%;overflow:visible}
 .collage-choice-group{margin:0 0 12px}
 .collage-choice-group h4{margin:0 0 6px;font-size:12px}
 .collage-choice-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
@@ -40,3 +40,12 @@
 
 #desktopPhotoDelete{display:grid;place-items:center;min-width:40px;min-height:40px;padding:6px}
 #desktopPhotoDelete[hidden]{display:none}
+
+#improveTextLegibility{width:100%;min-height:44px;margin-bottom:8px}
+
+#desktopPhotoSwap{display:grid;place-items:center;min-width:40px;min-height:40px;padding:6px}
+#desktopPhotoSwap[hidden],#photoSwapPrompt[hidden]{display:none}
+#photoSwapDestinations{position:fixed;z-index:23;pointer-events:none}
+#photoSwapDestinations polygon{fill:#ffab6622;stroke:#d87326;stroke-width:2;stroke-dasharray:6 4}
+#photoSwapPrompt{position:fixed;z-index:110;top:calc(env(safe-area-inset-top,0px) + 8px);left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;width:max-content;max-width:calc(100vw - 16px);padding:6px 8px;background:var(--ui-panel);color:var(--ui-text);border:1px solid var(--ui-line);border-radius:9px;font-size:12px}
+#photoSwapPrompt button{min-height:44px}
