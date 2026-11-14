@@ -21,6 +21,11 @@ body #textResetMenu{margin-top:10px;padding:9px 0}body #textWorkflow{margin-bott
 @media(max-width:850px){#carouselSelectionTools button{font-size:11px}#recentCardsDialog{padding:16px}.recent-heading{gap:6px}.recent-heading h2{font-size:18px}.composition-grid button{min-height:94px}.visual-choice-grid{gap:7px}.design-section h3{margin-top:5px}body #fontPickerOpen .font-chosen-name{font-size:12px}}
 
 .mini-bottomCenter{align-items:center;justify-content:flex-end}
+.design-custom-colors{margin:10px 0 0}
+.design-custom-colors summary{cursor:pointer;font-size:13px;padding:8px 0}
+@media(min-width:851px){
+ #toolDrawerContent>.design-section+.design-section{margin-top:15px;padding-top:8px;border-top:1px solid var(--ui-line)}
+}
 .composition-mini img{display:none}
 @media(min-width:851px){
  .format-grid button{min-height:76px;padding:7px;gap:4px}

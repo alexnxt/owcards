@@ -31,8 +31,23 @@
  }
  heading(panels.background,'Tu estilo');let actions=document.createElement('div');actions.className='design-style-actions';panels.background.append(actions);
  for(let [id,title,tab]of [['designPresets','Prediseños','presets'],['designMine','Mis diseños','mine'],['designSaveCurrent','Guardar mi diseño','mine']]){let b=document.createElement('button');b.id=id;b.type='button';b.innerHTML=editorIcon(id==='designSaveCurrent'?'pages':'design')+'<span>'+title+'</span>';b.onclick=()=>{$('openDesignLibrary').click();document.querySelector('[data-design-tab="'+tab+'"]').click();if(id==='designSaveCurrent')$('designSaveName').focus()};actions.append(b)}
- heading(panels.background,'Paletas');let palette=document.querySelector('.palettes');panels.background.append(palette);heading(panels.background,'Colores personalizados');let colors=document.querySelector('#designPanel .colorrow');panels.background.append(colors);
- let old=toolNodes;toolNodes=function(name){if(name==='design')return [panels[designToolMode]||panels.ratio];let nodes=old(name);if(name==='photos'&&photoToolMode==='collage'||name==='collage')nodes=nodes.filter(n=>n!==$('collageTextLayout')&&n!==document.querySelector('label[for="collageTextLayout"]'));return nodes};
+ heading(panels.background,'Paletas');let palette=document.querySelector('.palettes');panels.background.append(palette);const colorHeading=document.createElement('h3');
+ colorHeading.textContent='Colores personalizados';
+ const colors=document.querySelector('#designPanel .colorrow'), custom=document.createElement('details');
+ custom.className='design-custom-colors';
+ const summary=document.createElement('summary');
+ summary.textContent=colorHeading.textContent;
+ custom.append(summary);
+ panels.background.append(colorHeading,custom);
+ function layoutColors(){
+  const mobile=isMobileEditor(), host=mobile?panels.background:custom;
+  colorHeading.hidden=!mobile;
+  custom.hidden=mobile;
+  if(colors.parentElement!==host)host.append(colors);
+ }
+ window.addEventListener('resize',layoutColors);
+ layoutColors();
+ let old=toolNodes;toolNodes=function(name){if(name==='design')return isMobileEditor()?[panels[designToolMode]||panels.ratio]:Object.values(panels);let nodes=old(name);if(name==='photos'&&photoToolMode==='collage'||name==='collage')nodes=nodes.filter(n=>n!==$('collageTextLayout')&&n!==document.querySelector('label[for="collageTextLayout"]'));return nodes};
  for(let [value,text]of [['left','Solo izquierda'],['right','Solo derecha'],['horizontal','Izquierda y derecha']]){let option=document.createElement('option');option.value=value;option.textContent=text;$('fadeEdges').append(option)}
  let edge=$('effectControl-edgeFade'),side=$('effectControl-sideBlur');edge.open=true;side.open=true;edge.classList.add('always-open-blur');side.classList.add('always-open-blur');edge.querySelector('summary label').textContent='Suavizar bordes de la foto';side.querySelector('summary label').textContent='Difuminar detrás del texto';
  let effectsTitle=document.createElement('h3');effectsTitle.textContent='Difuminar';effectsTitle.id='blurHeading';$('imagesPanel').append(effectsTitle);const nodes=toolNodes;toolNodes=function(name){return name==='effects'?[effectsTitle,edge,side,...nodes(name).filter(n=>n!==edge&&n!==side)]:nodes(name)};
