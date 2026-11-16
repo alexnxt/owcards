@@ -14,5 +14,14 @@
 .text-color-hex{display:flex;align-items:center;gap:5px;margin:0;font-size:10px}
 .text-color-hex input{width:88px!important;min-width:0;min-height:38px;margin:0!important;padding:6px!important;font:12px ui-monospace,monospace}
 .text-color-hex input[aria-invalid=true]{outline:2px solid #ef4444}
+#openFragmentColors{margin:5px 0;font-size:13px}
+#fragmentColorDialog{width:min(92vw,340px);padding:16px;border:1px solid var(--ui-line);border-radius:12px}
+#fragmentColorDialog::backdrop{background:#0008}
+#fragmentColorTitle{margin:0;font-size:17px}
+#fragmentColorExcerpt{margin:8px 0;overflow-wrap:anywhere;max-height:4.5em;overflow:auto}
+#fragmentColorChoices .text-color-swatch{position:relative;min-width:0;height:38px;padding:0}
+.fragment-color-actions{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:10px}
+.fragment-color-actions label{display:flex;align-items:center;gap:5px;margin:0;font-size:13px}
+.fragment-color-actions button{padding:7px;font-size:12px}
 @media(max-width:850px){.text-color-hex{display:none}#textColorPalette .text-color-swatches .text-color-swatch{height:42px;min-height:42px}.text-color-swatches{gap:7px}}
 

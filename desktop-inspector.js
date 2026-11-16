@@ -9,10 +9,7 @@
  button(home,'desktopDesigns','Elegir prediseño','design',()=>$('openDesignLibrary').click());host.prepend(home);
  const row=document.createElement('div');row.id='desktopTextActions';
  button(row,'desktopEditText','Editar','write',()=>{$('textMode-write').click();$('richContent').focus()});
- const duplicate=button(row,'desktopDuplicateText','Duplicar','copy',()=>{
-  let p=state.pages[state.current],from=selectedText||$('richTarget').value,key=Array.from({length:12},(_,i)=>'free'+(i+1)).find(k=>!p.freeTextKeys.includes(k));if(!key)return toast('Puedes añadir hasta 12 textos libres por tarjeta.');
-  historyGroup=null;p[key]=p[from];p.textStyles[key]=structuredClone(richStyle(p,from));let pos=currentTextPosition(from);p.textPositions[key]={...pos,y:Math.min(95,pos.y+4)};p.freeTextKeys.push(key);syncTextTargets();selectedText=key;activePhoto=null;$('richTarget').value=key;$('richTarget').dispatchEvent(new Event('change',{bubbles:true}));sync();persist();activatePanel('text');$('richTab-text').click();refresh();
- });
+ const duplicate=button(row,'desktopDuplicateText','Duplicar','copy',()=>duplicateTextBlock($('richTarget').value));
  button(row,'desktopDeleteText','Eliminar','trash',()=>$('deleteSelectedText').click());$('textWorkflow').before(row);
  const collage=button(drawer.querySelector('.drawer-heading'),'desktopPhotoCollage','Collage','collage',()=>openCollageDesigns());
  editorIconPaths.swap='M3 7h17m-4-4 4 4-4 4M21 17H4m4-4-4 4 4 4';
@@ -29,7 +26,7 @@
  remove.title='Eliminar foto (Suprimir)';
  remove.setAttribute('aria-label','Eliminar foto');
  remove.setAttribute('aria-keyshortcuts','Delete');
- function refresh(){if(busy)return;busy=true;try{let desktop=!isMobileEditor();document.body.classList.toggle('desktop-inspector',desktop);home.hidden=!desktop||!drawer.hidden;const page=state.pages[state.current];filters.hidden=!desktop||drawer.hidden||mobileTool!=='photos'||photoToolMode!=='photos'||activePhoto?.page!==page||!sources(page)[activePhoto.index];exchange.hidden=remove.hidden=collage.hidden=filters.hidden||sources(page).length<2;row.hidden=!desktop||mobileTool!=='text'||document.body.classList.contains('inspector-writing');duplicate.disabled=state.pages[state.current].freeTextKeys.length>=12;if(desktop){dock.hidden=true;document.body.classList.remove('context-action-mode');$('contextInspectorBack').hidden=true;}}finally{busy=false}}
+ function refresh(){if(busy)return;busy=true;try{let desktop=!isMobileEditor();document.body.classList.toggle('desktop-inspector',desktop);home.hidden=!desktop||!drawer.hidden;const page=state.pages[state.current];filters.hidden=!desktop||drawer.hidden||mobileTool!=='photos'||photoToolMode!=='photos'||activePhoto?.page!==page||!sources(page)[activePhoto.index];exchange.hidden=remove.hidden=collage.hidden=filters.hidden||sources(page).length<2;row.hidden=!desktop||mobileTool!=='text'||document.body.classList.contains('inspector-writing');duplicate.disabled=page.freeTextKeys.length>=12||!page[$('richTarget').value]?.trim();if(desktop){dock.hidden=true;document.body.classList.remove('context-action-mode');$('contextInspectorBack').hidden=true;}}finally{busy=false}}
  const up=cv.onpointerup;cv.onpointerup=e=>{up(e);if(!isMobileEditor()){
   if(selectedText&&state.pages[state.current][selectedText]){activatePanel('text');$('richTab-text').click()}
   else if(activePhoto?.page===state.pages[state.current]){
@@ -46,10 +43,14 @@
 // Keep the desktop text picker and style controls bound to the shared editor.
 document.addEventListener('DOMContentLoaded',()=>{
  const target=$('richTarget'),add=$('addFreeText'),picker=$('textAddMenuRow');
- const write=$('textWritePane'),workflow=$('textWorkflow'),style=$('textMode-style');
+ const write=$('textWritePane'),workflow=$('textWorkflow');
  const styleTabs=$('textStylePane').querySelector('.rich-tabs');
  const styleButtons=Array.from(workflow.querySelectorAll('[data-rich-tab]'));
  const position=$('textMode-position');
+ const positionPane=$('richPane-layout'),positionHeading=document.createElement('h3');
+ positionHeading.id='desktopPositionHeading';
+ positionHeading.textContent='Posición';
+ positionPane.prepend(positionHeading);
  const preset=$('textPresetColors');
  const colorsHome=preset.parentElement;
  const buttons=new Map();
@@ -95,36 +96,33 @@ document.addEventListener('DOMContentLoaded',()=>{
   items[next].click();
   items[next].focus({preventScroll:true});
  }
- for(const button of [style,position])button.addEventListener('keydown',event=>navigate(event,[style,position]),true);
  for(const button of styleButtons)button.addEventListener('keydown',event=>navigate(event,styleButtons),true);
- const updateModes=()=>{
-  if(isMobileEditor())return;
-  const on=position.getAttribute('aria-selected')!=='true';
-  style.setAttribute('aria-selected',String(on));
-  style.tabIndex=on?0:-1;
- };
- style.addEventListener('click',updateModes);
- for(const button of [position,...styleButtons])button.addEventListener('click',updateModes);
  let wasMobile;
+ let restorePosition=false;
  function layout(){
   const mobile=isMobileEditor();
   if(mobile===wasMobile)return;
   wasMobile=mobile;
-  style.hidden=mobile;
   styleTabs.hidden=mobile;
+  positionHeading.hidden=mobile;
+  positionPane.hidden=mobile&&position.getAttribute('aria-selected')!=='true';
+  positionPane.setAttribute('role',mobile?'tabpanel':'region');
+  positionPane.setAttribute('aria-labelledby',mobile?position.id:positionHeading.id);
   if(mobile){
    workflow.after(write);
    for(const button of styleButtons)workflow.insertBefore(button,position);
    colorsHome.prepend(preset);
+   if(restorePosition)position.click();
   }else{
+   restorePosition=position.getAttribute('aria-selected')==='true';
    workflow.before(write);
    styleTabs.append(...styleButtons);
    $('typographyQuickRow').after(preset);
+   if(restorePosition)$('textMode-style').click();
   }
-  updateModes();
  }
  const before=render;
- render=function(refresh=true){before(refresh);syncPicker();updateModes()};
+ render=function(refresh=true){before(refresh);syncPicker()};
  target.addEventListener('change',syncPicker);
  window.addEventListener('resize',layout);
  layout();
