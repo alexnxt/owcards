@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded',()=>{
  }
  const free=document.createElement('select');
  free.id='desktopFreeTexts';
- free.setAttribute('aria-label','Textos libres');
+ free.setAttribute('aria-label','Otros textos');
  free.onchange=()=>{if(free.value)select(free.value)};
  picker.after(free);
  function syncPicker(){
@@ -80,9 +80,9 @@ document.addEventListener('DOMContentLoaded',()=>{
    chip.hidden=!page[key]?.trim()&&target.value!==key;
    chip.setAttribute('aria-pressed',String(target.value===key));
   }
-  const keys=page.freeTextKeys;
+  const keys=[...(page.source?.trim()||target.value==='source'?['source']:[]),...page.freeTextKeys];
   if(free.options.length!==keys.length+1||keys.some((key,i)=>free.options[i+1].value!==key)){
-   free.replaceChildren(new Option('Textos libres',''),...keys.map(key=>new Option(textName(key),key)));
+   free.replaceChildren(new Option('Otros textos',''),...keys.map(key=>new Option(textName(key),key)));
   }
   free.hidden=!keys.length;
   free.value=keys.includes(target.value)?target.value:'';
