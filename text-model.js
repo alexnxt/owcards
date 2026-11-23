@@ -6,8 +6,17 @@ function isTextKey(key){return baseTextKeys.includes(key)||isFreeTextKey(key)}
 function cardTextKeys(p){return [...baseTextKeys,...(p.freeTextKeys||[])]}
 function textHitKeys(p){return [...(p.freeTextKeys||[])].reverse().concat(['source','brand','body','title','tag'])}
 function textName(key){return {title:'Titular',body:'Texto de apoyo',tag:'Etiqueta',brand:'Marca / usuario',source:'Fuente / crédito'}[key]||(isFreeTextKey(key)?'Texto libre '+key.slice(4):'Texto')}
+function textChoiceLabel(page,key){
+ if(key!=='source'&&!isFreeTextKey(key))return textName(key);
+ let content=(page[key]||'').replace(/\s+/g,' ').trim();
+ if(key==='source')content=content.replace(/^fuente:\s*/i,'');
+ if(!content)return textName(key);
+ const characters=Array.from(content);
+ const sample=characters.slice(0,28).join('')+(characters.length>28?'…':'');
+ return (key==='source'?'Crédito':'Texto')+' · '+sample;
+}
 function textMaxLength(key){return {title:220,body:400,tag:60,brand:80}[key]||1000}
 function validFreeTexts(p){let keys=p.freeTextKeys;if(keys===undefined)return true;return Array.isArray(keys)&&keys.length<=12&&new Set(keys).size===keys.length&&keys.every(k=>typeof k==='string'&&isFreeTextKey(k)&&typeof p[k]==='string'&&p[k].length<=1000)}
-function syncTextTargets(){if(!document.querySelector)return;let p=state.pages[state.current],keys=cardTextKeys(p);for(let id of ['textTarget','richTarget']){let select=$(id);if(!select)continue;let previous=select.value;for(let option of Array.from(select.options))if(isFreeTextKey(option.value)&&!keys.includes(option.value))option.remove();for(let key of keys)if(!Array.from(select.options).some(o=>o.value===key)){let option=document.createElement('option');option.value=key;option.textContent=textName(key);select.append(option)}select.value=keys.includes(previous)?previous:'title'}}
+function syncTextTargets(){if(!document.querySelector)return;let p=state.pages[state.current],keys=cardTextKeys(p);for(let id of ['textTarget','richTarget']){let select=$(id);if(!select)continue;let previous=select.value;for(let option of Array.from(select.options))if(isFreeTextKey(option.value)&&!keys.includes(option.value))option.remove();for(let key of keys)if(!Array.from(select.options).some(o=>o.value===key)){let option=document.createElement('option');option.value=key;option.textContent=textName(key);select.append(option)}for(const option of select.options)setEditorText(option,textChoiceLabel(p,option.value));select.value=keys.includes(previous)?previous:'title'}}
 function preserveFreeTextDesign(next,original){for(let key of ['source',...(original.freeTextKeys||[])]){for(let map of ['textStyles','textPositions']){next[map]??={};if(original[map]?.[key])next[map][key]=structuredClone(original[map][key]);else delete next[map][key]}}return next}
 function deleteTextBlock(p,key){if(isFreeTextKey(key)){delete p.textFragmentColors?.[key];p.freeTextKeys=p.freeTextKeys.filter(k=>k!==key);delete p[key];for(let map of ['textStyles','textPositions','textLocks'])if(p[map])delete p[map][key]}else{rememberDeletedText(p,key);p[key]=''}}

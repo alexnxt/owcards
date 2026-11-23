@@ -4,7 +4,7 @@ let group=document.createElement('div');group.id='projectModeOptions';group.setA
 menu.prepend(group);
 let create=document.createElement('button');create.id='newSingleCard';create.type='button';create.setAttribute('aria-label','Nueva tarjeta');create.innerHTML='<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 4v16M4 12h16"/></svg><span>Nueva</span>';
 function isEmptyDraft(page){
-  if(sources(page).length||page.freeTextKeys?.some(key=>page[key]?.trim()))return false;
+  if(page.source?.trim()||sources(page).length||page.freeTextKeys?.some(key=>page[key]?.trim()))return false;
   const brand=page.brand.trim();
   if(brand&&brand!==fresh().brand&&brand!==page.initialSignature)return false;
   const defaults=fresh();

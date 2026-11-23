@@ -1,17 +1,46 @@
 // Reuse preview nodes and rasterize only cards whose content or resources changed.
 const cardPreviewCache=new WeakMap();let cardPreviewOrder=[],cardPreviewFontRevision=0;
 const visibleCardPreviews=new Set();
+// These budgets cover reusable decoded surfaces, not originals saved in the project.
+const PHOTO_CACHE_BUDGET=64*1024*1024;
+const photoSourcePins=new Map();
 let photoCacheTrimTimer;
+function retainPhotoSources(pages){
+ const held=[...new Set(pages.flatMap(sources))];let released=false;
+ for(const source of held)photoSourcePins.set(source,(photoSourcePins.get(source)||0)+1);
+ return ()=>{if(released)return;released=true;for(const source of held){const count=photoSourcePins.get(source)-1;if(count>0)photoSourcePins.set(source,count);else photoSourcePins.delete(source)}schedulePhotoCacheTrim()};
+}
+function decodedPhotoBytes(image){
+ let bytes=(image.naturalWidth||image.width||0)*(image.naturalHeight||image.height||0)*4;
+ const cropped=croppedPhotoCache.get(image)?.canvas;
+ if(cropped)bytes+=cropped.width*cropped.height*4;
+ if(typeof filterPreviewSources!=='undefined')for(const source of [image,cropped]){const preview=source&&filterPreviewSources.get(source);if(preview)bytes+=preview.width*preview.height*4}
+ return bytes;
+}
+function releaseDecodedPhoto(source){
+ const image=imageCache.get(source);if(!image)return;
+ const cropped=croppedPhotoCache.get(image)?.canvas;
+ for(const surface of [image,cropped])if(surface){
+  releasePhotoFilterResults(surface);
+  if(typeof filterPreviewSources!=='undefined'){const preview=filterPreviewSources.get(surface);if(preview){releasePhotoFilterResults(preview);filterPreviewSources.delete(surface)}}
+ }
+ croppedPhotoCache.delete(image);
+ imageCache.delete(source);
+}
+function trimPhotoCache(){
+ const active=new Set([...sources(state.pages[state.current]),...photoSourcePins.keys()]);
+ const project=new Set(state.pages.flatMap(sources));
+ for(const [source,image] of imageCache)if(image.complete&&!project.has(source)&&!active.has(source))releaseDecodedPhoto(source);
+ let bytes=0;for(const image of imageCache.values())bytes+=decodedPhotoBytes(image);
+ for(const [source,image] of imageCache){
+  if(bytes<=PHOTO_CACHE_BUDGET)break;
+  if(image.complete&&!active.has(source)){bytes-=decodedPhotoBytes(image);releaseDecodedPhoto(source)}
+ }
+ trimPhotoFilterCache();
+}
 function schedulePhotoCacheTrim(){
  clearTimeout(photoCacheTrimTimer);
- photoCacheTrimTimer=setTimeout(()=>{
-  const active=new Set(sources(state.pages[state.current]));
-  const limit=18;
-  for(const [source,image] of imageCache){
-   if(imageCache.size<=limit)break;
-   if(image.complete&&!active.has(source))imageCache.delete(source);
-  }
- },250);
+ photoCacheTrimTimer=setTimeout(trimPhotoCache,250);
 }
 const cardPreviewObserver=typeof IntersectionObserver==='function'?new IntersectionObserver(entries=>{
  for(const {target,isIntersecting} of entries){

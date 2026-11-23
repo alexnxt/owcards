@@ -51,8 +51,6 @@ document.addEventListener('DOMContentLoaded',()=>{
  positionHeading.id='desktopPositionHeading';
  positionHeading.textContent='Posición';
  positionPane.prepend(positionHeading);
- const preset=$('textPresetColors');
- const colorsHome=preset.parentElement;
  const buttons=new Map();
  picker.setAttribute('role','group');
  picker.setAttribute('aria-label','Bloques de texto');
@@ -84,6 +82,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   if(free.options.length!==keys.length+1||keys.some((key,i)=>free.options[i+1].value!==key)){
    free.replaceChildren(new Option('Otros textos',''),...keys.map(key=>new Option(textName(key),key)));
   }
+  for(const option of free.options)if(option.value)option.textContent=textChoiceLabel(page,option.value);
   free.hidden=!keys.length;
   free.value=keys.includes(target.value)?target.value:'';
  }
@@ -111,13 +110,11 @@ document.addEventListener('DOMContentLoaded',()=>{
   if(mobile){
    workflow.after(write);
    for(const button of styleButtons)workflow.insertBefore(button,position);
-   colorsHome.prepend(preset);
    if(restorePosition)position.click();
   }else{
    restorePosition=position.getAttribute('aria-selected')==='true';
    workflow.before(write);
    styleTabs.append(...styleButtons);
-   $('typographyQuickRow').after(preset);
    if(restorePosition)$('textMode-style').click();
   }
  }

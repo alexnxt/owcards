@@ -56,3 +56,7 @@ No añadas proyectos editables personales al repositorio público. Los archivos 
 - Configurar la publicación: https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
 
 Preparado el 3 de noviembre de 2026.
+
+## Editar los estilos
+
+Los estilos publicados están reunidos en `ui.bundle.css`. Después de modificar un archivo CSS de origen, ejecuta `node build-styles.cjs` y sube también el archivo generado. `style-sources.json` conserva el orden de los estilos. Puedes comprobar que el archivo está actualizado con `node build-styles.cjs --check`. GitHub Pages utiliza directamente los archivos ya preparados; no necesita ejecutar este paso al alojar la web.

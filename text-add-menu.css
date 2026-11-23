@@ -3,3 +3,10 @@ body.inspector-writing #textAddMenuRow{display:none}
 #textAddMenu{position:fixed;z-index:150;border:1px solid var(--ui-line);background:var(--ui-panel);color:var(--ui-text);border-radius:10px;padding:5px;box-shadow:0 8px 25px #0003;overflow-y:auto;overscroll-behavior:contain}
 #textAddMenu[hidden]{display:none!important}#textAddMenu button{display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;min-height:44px;border:0;background:transparent;text-align:left;padding:10px;border-radius:6px;font-size:13px}
 #textAddMenu small{flex:0 0 auto;color:var(--ui-muted);font-size:11px}#textAddMenu .restore-text-option small{color:var(--ui-accent);font-weight:650}#textAddMenu button:last-child{border-top:1px solid var(--ui-line);border-radius:0;margin-top:4px}#textAddMenu button:hover,#textAddMenu button:focus-visible{background:var(--ui-active);outline:2px solid var(--ui-accent);outline-offset:-2px}
+#textAddMenu #textRestoreOptions button{padding-left:20px;border:0;margin:0;border-radius:6px}
+#textAddMenu #removeAllCardText{border-top:1px solid var(--ui-line);margin-top:5px;color:var(--ui-accent)!important}
+#clearAllTextDialog{width:min(92vw,380px);padding:20px;border:1px solid var(--ui-line);border-radius:12px}
+#clearAllTextDialog::backdrop{background:#0008}
+#clearAllTextDialog h2{font-size:18px;margin:0 0 12px}
+#clearAllTextDialog p{font-size:14px;line-height:1.5}
+.clear-text-actions{display:flex;justify-content:flex-end;gap:8px}

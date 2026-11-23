@@ -11,6 +11,14 @@
 #contextDockActions{display:flex;align-items:center;gap:4px;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;touch-action:pan-x;scrollbar-width:thin;scrollbar-color:var(--ui-line) transparent;padding:2px 2px 4px}
 #contextDockActions::-webkit-scrollbar{height:4px}
 #contextDockActions::-webkit-scrollbar-thumb{background:var(--ui-line);border-radius:4px}
+#contextDockScroll{display:flex;align-items:center;gap:3px;min-width:0}
+#contextDockScroll>#contextDockActions{flex:1;min-width:0}
+#contextActionDock .context-scroll-arrow{flex:0 0 44px;width:44px;min-height:44px;padding:5px}
+html[data-theme] #contextActionDock .context-scroll-arrow{background:var(--ui-active)!important;color:var(--ui-accent)!important}
+@media(max-width:850px){
+ #contextDockScroll>#contextDockActions.dock-primary{display:flex}
+ #contextActionDock #contextDockActions.dock-primary>button{flex:0 0 52px;width:52px}
+}
 #contextActionDock .dock-black svg{stroke-width:2.8}
 html[data-theme] #contextActionDock button{background:transparent!important}
 html[data-theme] #contextActionDock button:hover{background:color-mix(in srgb,var(--ui-hover) 65%,transparent)!important}

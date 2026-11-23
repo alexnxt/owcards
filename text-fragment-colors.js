@@ -71,52 +71,6 @@ function paintFragmentLine(c,parts,x,y,style){
 
 document.addEventListener('DOMContentLoaded',()=>{
  const input=$('richContent'),target=$('richTarget');
- const trigger=document.createElement('button');
- trigger.type='button';
- trigger.id='openFragmentColors';
- trigger.textContent='Colorear selección';
- input.closest('.text-writing-field').after(trigger);
- const dialog=document.createElement('dialog');
- dialog.id='fragmentColorDialog';
- dialog.setAttribute('aria-labelledby','fragmentColorTitle');
- dialog.innerHTML='<h2 id="fragmentColorTitle">Colorear selección</h2><p id="fragmentColorExcerpt"></p><div id="fragmentColorChoices" class="text-color-swatches" role="group" aria-label="Colores"></div><div class="fragment-color-actions"><label>Personalizado <input id="fragmentCustomColor" type="color"></label><button type="button" id="applyFragmentCustomColor">Aplicar</button><button type="button" id="clearFragmentColor">Volver al color del bloque</button><form method="dialog"><button>Cerrar</button></form></div>';
- document.body.append(dialog);
- let selection;
- let pendingSelection;
- const readSelection=()=>({page:state.pages[state.current],key:target.value,text:input.value,start:input.selectionStart,end:input.selectionEnd});
- function apply(color){
-  if(!selection)return;
-  const {page,key,text,start,end}=selection;
-  if(page!==state.pages[state.current]||target.value!==key||page[key]!==text){dialog.close();return;}
-  const colors=Array.from({length:text.length},(_,i)=>fragmentColors(page,key)[i]||null);
-  colors.fill(color,start,end);
-  historyGroup=null;
-  saveFragmentColors(page,key,text,colors);
-  render(false);
-  persist();
-  historyGroup=null;
-  dialog.close();
- }
- for(const preset of $('textPresetColors').querySelectorAll('[data-text-color]')){
-  const swatch=preset.cloneNode(false);
-  swatch.onclick=()=>apply(swatch.dataset.textColor);
-  $('fragmentColorChoices').append(swatch);
- }
- $('applyFragmentCustomColor').onclick=()=>apply($('fragmentCustomColor').value);
- $('clearFragmentColor').onclick=()=>apply(null);
- trigger.addEventListener('pointerdown',()=>{pendingSelection=readSelection()});
- trigger.onclick=event=>{
-  selection=(event.detail&&pendingSelection)||readSelection();
-  pendingSelection=null;
-  if(selection.start===selection.end){toast('Selecciona una palabra o frase en el campo de texto.');return;}
-  $('fragmentColorExcerpt').textContent=selection.text.slice(selection.start,selection.end);
-  $('fragmentCustomColor').value=fragmentColors(selection.page,selection.key)[selection.start]||richStyle(selection.page,selection.key).color;
-  dialog.showModal();
- };
- dialog.addEventListener('close',()=>{
-  if(selection&&input.getClientRects().length&&selection.page===state.pages[state.current]&&target.value===selection.key)input.setSelectionRange(selection.start,selection.end);
-  selection=null;
- });
  input.addEventListener('input',()=>{
   const page=state.pages[state.current],key=target.value,old=page[key],next=input.value,colors=fragmentColors(page,key);
   if(!colors.length||old===next)return;
