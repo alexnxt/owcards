@@ -26,7 +26,7 @@
  remove.title='Eliminar foto (Suprimir)';
  remove.setAttribute('aria-label','Eliminar foto');
  remove.setAttribute('aria-keyshortcuts','Delete');
- function refresh(){if(busy)return;busy=true;try{let desktop=!isMobileEditor();document.body.classList.toggle('desktop-inspector',desktop);home.hidden=!desktop||!drawer.hidden;const page=state.pages[state.current];filters.hidden=!desktop||drawer.hidden||mobileTool!=='photos'||photoToolMode!=='photos'||activePhoto?.page!==page||!sources(page)[activePhoto.index];exchange.hidden=remove.hidden=collage.hidden=filters.hidden||sources(page).length<2;row.hidden=!desktop||mobileTool!=='text'||document.body.classList.contains('inspector-writing');duplicate.disabled=page.freeTextKeys.length>=12||!page[$('richTarget').value]?.trim();if(desktop){dock.hidden=true;document.body.classList.remove('context-action-mode');$('contextInspectorBack').hidden=true;}}finally{busy=false}}
+ function refresh(){if(busy)return;busy=true;try{let desktop=!isMobileEditor();document.body.classList.toggle('desktop-inspector',desktop);home.hidden=!desktop||!drawer.hidden;const page=state.pages[state.current];filters.hidden=!desktop||drawer.hidden||mobileTool!=='photos'||photoToolMode!=='photos'||activePhoto?.page!==page||!sources(page)[activePhoto.index];exchange.hidden=remove.hidden=collage.hidden=filters.hidden||sources(page).length<2;row.hidden=mobileTool!=='text'||document.body.classList.contains('inspector-writing');duplicate.disabled=page.freeTextKeys.length>=12||!page[$('richTarget').value]?.trim();$('desktopDeleteText').disabled=!page[$('richTarget').value]?.trim();if(desktop){dock.hidden=true;document.body.classList.remove('context-action-mode');$('contextInspectorBack').hidden=true;}}finally{busy=false}}
  const up=cv.onpointerup;cv.onpointerup=e=>{up(e);if(!isMobileEditor()){
   if(selectedText&&state.pages[state.current][selectedText]){activatePanel('text');$('richTab-text').click()}
   else if(activePhoto?.page===state.pages[state.current]){
@@ -51,40 +51,32 @@ document.addEventListener('DOMContentLoaded',()=>{
  positionHeading.id='desktopPositionHeading';
  positionHeading.textContent='Posición';
  positionPane.prepend(positionHeading);
- const buttons=new Map();
- picker.setAttribute('role','group');
- picker.setAttribute('aria-label','Bloques de texto');
- function select(key){
-  target.value=key;
-  target.dispatchEvent(new Event('change',{bubbles:true}));
- }
- for(const [key,label] of [['title','Titular'],['body','Apoyo'],['tag','Etiqueta'],['brand','Marca']]){
-  const chip=document.createElement('button');
-  chip.type='button';
-  chip.className='desktop-text-chip';
-  chip.textContent=label;
-  chip.onclick=()=>select(key);
-  picker.insertBefore(chip,add);
-  buttons.set(key,chip);
- }
- const free=document.createElement('select');
- free.id='desktopFreeTexts';
- free.setAttribute('aria-label','Otros textos');
- free.onchange=()=>{if(free.value)select(free.value)};
- picker.after(free);
- function syncPicker(){
-  const page=state.pages[state.current];
-  for(const [key,chip] of buttons){
-   chip.hidden=!page[key]?.trim()&&target.value!==key;
-   chip.setAttribute('aria-pressed',String(target.value===key));
-  }
-  const keys=[...(page.source?.trim()||target.value==='source'?['source']:[]),...page.freeTextKeys];
-  if(free.options.length!==keys.length+1||keys.some((key,i)=>free.options[i+1].value!==key)){
-   free.replaceChildren(new Option('Otros textos',''),...keys.map(key=>new Option(textName(key),key)));
-  }
-  for(const option of free.options)if(option.value)option.textContent=textChoiceLabel(page,option.value);
-  free.hidden=!keys.length;
-  free.value=keys.includes(target.value)?target.value:'';
+ // Keep everyday alignment visible; precise coordinates and typography share
+ // one disclosure without replacing any inputs or their editing handlers.
+ const fine=document.createElement('details'),fineTitle=document.createElement('summary');
+ fine.id='textFineControls';
+ fine.className='compact-section';
+ fineTitle.textContent='Ajuste fino';
+ fine.append(fineTitle);
+ const coordinates=positionPane.querySelector('.shared-position-controls'),spacing=$('textSpacingControls');
+ coordinates.before(fine);
+ fine.append(coordinates,spacing);
+ spacing.open=true;
+ const openSpacing=window.openTextSpacing;
+ window.openTextSpacing=function(){fine.open=true;openSpacing()};
+ // Reuse the native target selector and existing action handlers on both sizes.
+ const pickerLabel=document.querySelector('label[for="richTarget"]');
+ pickerLabel.textContent='Texto seleccionado';
+ picker.classList.add('simple-text-picker');
+ picker.append(pickerLabel,target);
+ const actions=$('desktopTextActions');
+ actions.prepend(add);
+ add.innerHTML='<span aria-hidden="true">+</span><span>Añadir texto</span>';
+ for(const [id,label] of [['desktopDuplicateText','Duplicar texto'],['desktopDeleteText','Eliminar texto']]){
+  const button=$(id);
+  button.title=label;
+  button.setAttribute('aria-label',label);
+  button.querySelector('span').remove();
  }
  function navigate(event,items){
   if(isMobileEditor()||!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
@@ -109,19 +101,17 @@ document.addEventListener('DOMContentLoaded',()=>{
   positionPane.setAttribute('aria-labelledby',mobile?position.id:positionHeading.id);
   if(mobile){
    workflow.after(write);
+   picker.after(actions);
    for(const button of styleButtons)workflow.insertBefore(button,position);
    if(restorePosition)position.click();
   }else{
    restorePosition=position.getAttribute('aria-selected')==='true';
    workflow.before(write);
+   write.after(actions);
    styleTabs.append(...styleButtons);
    if(restorePosition)$('textMode-style').click();
   }
  }
- const before=render;
- render=function(refresh=true){before(refresh);syncPicker()};
- target.addEventListener('change',syncPicker);
  window.addEventListener('resize',layout);
  layout();
- syncPicker();
 });

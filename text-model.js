@@ -5,15 +5,16 @@ function isFreeTextKey(key){return /^free(?:[1-9]|1[0-2])$/.test(key)}
 function isTextKey(key){return baseTextKeys.includes(key)||isFreeTextKey(key)}
 function cardTextKeys(p){return [...baseTextKeys,...(p.freeTextKeys||[])]}
 function textHitKeys(p){return [...(p.freeTextKeys||[])].reverse().concat(['source','brand','body','title','tag'])}
-function textName(key){return {title:'Titular',body:'Texto de apoyo',tag:'Etiqueta',brand:'Marca / usuario',source:'Fuente / crédito'}[key]||(isFreeTextKey(key)?'Texto libre '+key.slice(4):'Texto')}
+function textName(key){return {title:'Titular',body:'Texto de apoyo',tag:'Etiqueta',brand:'Marca / usuario',source:'Crédito'}[key]||(isFreeTextKey(key)?'Texto libre '+key.slice(4):'Texto')}
 function textChoiceLabel(page,key){
- if(key!=='source'&&!isFreeTextKey(key))return textName(key);
+ if(key==='source')return 'Crédito';
+ if(key==='brand')return 'Marca';
+ if(!isFreeTextKey(key))return textName(key);
  let content=(page[key]||'').replace(/\s+/g,' ').trim();
- if(key==='source')content=content.replace(/^fuente:\s*/i,'');
  if(!content)return textName(key);
  const characters=Array.from(content);
  const sample=characters.slice(0,28).join('')+(characters.length>28?'…':'');
- return (key==='source'?'Crédito':'Texto')+' · '+sample;
+ return 'Texto · '+sample;
 }
 function textMaxLength(key){return {title:220,body:400,tag:60,brand:80}[key]||1000}
 function validFreeTexts(p){let keys=p.freeTextKeys;if(keys===undefined)return true;return Array.isArray(keys)&&keys.length<=12&&new Set(keys).size===keys.length&&keys.every(k=>typeof k==='string'&&isFreeTextKey(k)&&typeof p[k]==='string'&&p[k].length<=1000)}

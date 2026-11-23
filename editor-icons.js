@@ -1,5 +1,7 @@
 // Shared artwork keeps the same action recognizable across the editor.
 const editorIconPaths={
+ fitContain:'M3 3h18v18H3zM5 8h14v8H5zM7 14l3-3 3 3 2-2 2 2',
+ fitCover:'M8 3H3v5M16 3h5v5M3 16v5h5M21 16v5h-5M4 13l5-5 6 6 3-3 3 3',
  filters:'M3 6h18M3 12h18M3 18h18M8 3v6m8 0v6m-8 0v6',
  crop:'M6 3v13a2 2 0 0 0 2 2h13M3 6h13a2 2 0 0 1 2 2v13',
  frame:'M7 3H3v4m14-4h4v4M3 17v4h4m10 0h4v-4M7 7h10v10H7zM7 14l3-3 3 3 2-2 2 2',

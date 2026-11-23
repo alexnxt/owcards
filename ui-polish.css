@@ -3,6 +3,10 @@
 #photoInputRow .upload{display:flex;align-items:center;justify-content:center;min-height:44px;padding:8px;margin:0;font-size:12px}
 .photo-fit-control{min-width:0}
 #photoInputRow select{width:100%;min-height:44px;margin:0;font-size:13px;padding:8px}
+#photoInputRow #imageFit{display:none!important}
+#photoInputRow #toggleImageFit{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;min-width:0;min-height:44px;margin:0;padding:8px 5px;font-size:13px;line-height:1.25}
+#toggleImageFit svg{width:20px;height:20px;flex-shrink:0}
+#toggleImageFit span{min-width:0}
 .photo-fit-control>label,#richEditor>label[for=richTarget],#richPane-text>label[for=fontPickerOpen]{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden;clip-path:inset(50%);white-space:nowrap;padding:0!important;margin:0!important;border:0!important}
 html[data-theme] .text-target-row #deleteSelectedText{position:static;display:flex;flex:0 0 44px;width:44px;height:44px;min-width:44px;min-height:44px;padding:8px;border-radius:8px;box-shadow:none;border-color:var(--ui-line)!important;background:transparent!important}
 .text-target-row #deleteSelectedText[hidden]{display:none!important}

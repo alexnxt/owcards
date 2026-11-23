@@ -39,6 +39,9 @@ function openSelectedPhotoFilters(){
    scrollArrowFrame=null;
    const enabled=isMobileEditor()&&!dock.hidden&&quick?.type==='text'&&textView==='main';
    const overflow=enabled&&strip.scrollWidth>scrollRow.clientWidth+1;
+   const fits=!dock.hidden&&strip.scrollWidth<=scrollRow.clientWidth+1;
+   strip.classList.toggle('dock-centered',fits);
+   strip.classList.toggle('dock-roomy',enabled&&fits);
    const atStart=strip.scrollLeft<=2;
    const atEnd=strip.scrollLeft+strip.clientWidth>=strip.scrollWidth-2;
    scrollPrevious.hidden=!overflow||atStart;
@@ -71,13 +74,14 @@ function openSelectedPhotoFilters(){
  });
  action('text','quickTextDelete','Eliminar texto',icons.trash,()=>{dismiss();$('deleteSelectedText').click()});
 
- const format=action('text','quickTextFormat','Texto: fuente y formato','<span class="dock-glyph">Aa</span>',()=>{textView='format';strip.scrollLeft=0;update();back.focus({preventScroll:true})});
+ const format=action('text','quickTextFormat','Formato rápido: tamaño, negrita y cursiva','<span class="dock-format-icon"><b>B</b><i>I</i></span>',()=>{textView='format';strip.scrollLeft=0;update();back.focus({preventScroll:true})});
  const italic=action('text','quickTextItalic','Cursiva','<span class="dock-glyph dock-italic">I</span>',()=>{$('rich-italic').click();update()});
  action('text','quickTextSpacing','Espaciado e interlineado',svg('M4 7h16M4 17h16M8 10l-3 2 3 2m8-4 3 2-3 2M5 12h14'),()=>{inspector('position');window.openTextSpacing?.()});
  const primaryIds=['quickTextEdit','quickTextDuplicate','quickTextAdd','quickTextStyle','quickTextColor','quickTextPosition','quickTextEffects','quickTextDelete'];for(let b of actions)if(b.dataset.contextType==='text')b.dataset.dockView=primaryIds.includes(b.id)?'main':'format';format.dataset.dockView='header';format.querySelector('.dock-action-label').remove();header.insertBefore(format,done);textLock.dataset.dockView='header';textLock.querySelector('.dock-action-label')?.remove();header.insertBefore(textLock,done);
  const back=document.createElement('button');back.id='contextDockBack';back.type='button';back.title='Volver a las acciones del texto';back.setAttribute('aria-label',back.title);back.innerHTML=icons.left;back.onclick=()=>{textView='main';strip.scrollLeft=0;update();format.focus({preventScroll:true})};header.prepend(back);
  const sizeGroup=document.createElement('div'),sizeButtons=document.createElement('div'),sizeLabel=document.createElement('span');sizeGroup.id='contextDockSize';sizeButtons.className='dock-size-buttons';sizeLabel.textContent='Tamaño';sizeLabel.className='dock-action-label';smaller.querySelector('.dock-action-icon').innerHTML='<span class="dock-size-glyph">A−</span>';larger.querySelector('.dock-action-icon').innerHTML='<span class="dock-size-glyph">A+</span>';smaller.querySelector('.dock-action-label')?.remove();larger.querySelector('.dock-action-label')?.remove();sizeButtons.append(smaller,larger);sizeGroup.append(sizeButtons,sizeLabel);
- for(const id of primaryIds){const button=$(id);if(id!=='quickTextAdd')button.querySelector('.dock-action-label')?.remove();else button.querySelector('.dock-action-label').textContent='+ Texto';strip.append(button)}strip.append(sizeGroup,bold,black,italic,$('quickTextSpacing'));$('quickTextStyle').querySelector('.dock-action-icon').innerHTML='<span class="dock-glyph">Aa</span>';bold.querySelector('.dock-action-icon').innerHTML='<span class="dock-glyph dock-bold">B</span>';black.querySelector('.dock-action-icon').innerHTML='<span class="dock-glyph dock-black-glyph">B+</span>';
+ const primaryLabels=['Editar','Duplicar','+ Texto','Fuente','Color','Posición','Efectos','Eliminar'];
+ for(const [index,id] of primaryIds.entries()){const button=$(id);button.querySelector('.dock-action-label').textContent=primaryLabels[index];strip.append(button)}strip.append(sizeGroup,bold,black,italic,$('quickTextSpacing'));$('quickTextStyle').querySelector('.dock-action-icon').innerHTML='<span class="dock-glyph">Aa</span>';bold.querySelector('.dock-action-icon').innerHTML='<span class="dock-glyph dock-bold">B</span>';black.querySelector('.dock-action-icon').innerHTML='<span class="dock-glyph dock-black-glyph">B+</span>';
  $('quickTextColor').querySelector('.dock-action-icon').innerHTML=editorIcon('color');
  const inspectorBack=document.createElement('button');inspectorBack.id='contextInspectorBack';inspectorBack.type='button';inspectorBack.title='Volver a la barra del texto';inspectorBack.setAttribute('aria-label',inspectorBack.title);inspectorBack.innerHTML=icons.left;inspectorBack.hidden=true;$('toolDrawer').querySelector('.drawer-heading').prepend(inspectorBack);function returnToTextActions(target){
   inspectorReturn=null;if(!target||target.page!==state.pages[state.current])return;if(mobileTool)closeToolDrawer();if(!target.page[target.key]){finishSelection();return}chooseText(target.key);quick={type:'text',page:target.page,key:target.key};lastTarget={page:target.page,id:'text:'+target.key};textView=target.view||'main';render(false);refreshSelection();update();(textView==='format'?back:$(target.tab==='write'?'quickTextEdit':target.tab==='position'?'quickTextPosition':target.tab==='color'?'quickTextColor':target.tab==='effects'?'quickTextEffects':'quickTextStyle')).focus({preventScroll:true})

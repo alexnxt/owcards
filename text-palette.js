@@ -127,6 +127,7 @@
   }
   const available=!!validSelection();
   if(!available)scope='block';
+  setEditorProperty(trigger,'hidden',!available||!writing.getClientRects().length||mobileTool!=='text'||$('toolDrawer').hidden);
   selectionButton.disabled=!available;
   selectionButton.title=available?'Colorear las palabras seleccionadas':'Selecciona una palabra o frase en el campo de escritura';
   controls.querySelectorAll('[data-color-scope]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.colorScope===scope)));
@@ -166,6 +167,24 @@
   remember(input.value);
   sync();
  };
+ // Preserve the exact block/word scope while the color sampler has focus.
+ window.owCaptureTextColor=()=>{
+  captureSelection();
+  const page=state.pages[state.current],key=target.value,text=page[key];
+  const savedScope=scope,savedSelection=selection?{...selection}:null;
+  const valid=()=>page===state.pages[state.current]&&key===target.value&&page[key]===text;
+  return {
+   valid,
+   apply(color){
+    if(!valid())return false;
+    scope=savedScope;
+    selection=savedSelection;
+    if(scope==='selection'&&!validSelection())return false;
+    apply(color);
+    return true;
+   }
+  };
+ };
  function applyHex(){
   if(!hexDirty)return;
   const color=normalize(hex.value);
@@ -188,8 +207,9 @@
  const trigger=document.createElement('button'),dialog=document.createElement('dialog');
  trigger.type='button';
  trigger.id='openFragmentColors';
- trigger.textContent='Color';
- trigger.title='Color de todo el bloque o de las palabras seleccionadas';
+ trigger.textContent='Color de selección';
+ trigger.title='Colorear las palabras seleccionadas';
+ trigger.hidden=true;
  writing.closest('.text-writing-field').after(trigger);
  dialog.id='fragmentColorDialog';
  dialog.setAttribute('aria-labelledby','fragmentColorTitle');
@@ -198,7 +218,8 @@
  dialog.addEventListener('keydown',event=>{if(event.key==='Escape')event.stopPropagation()});
  trigger.onpointerdown=captureSelection;
  trigger.onclick=()=>{
-  scope=validSelection()?'selection':'block';
+  if(!validSelection())return;
+  scope='selection';
   sync();
   dialog.insertBefore(controls,dialog.querySelector('form'));
   dialog.showModal();

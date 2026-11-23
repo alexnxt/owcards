@@ -319,6 +319,15 @@ html[data-theme] #contextActionDock #quickPhotoLock[aria-pressed=true]{backgroun
 #desktopPhotoFilters{display:grid;place-items:center;min-width:40px;min-height:40px;padding:6px}
 #desktopPhotoFilters[hidden]{display:none}
 @media(max-width:400px){#desktopPhotoFilters svg{width:18px;height:18px}}
+#contextDockScroll>#contextDockActions{display:flex;justify-content:flex-start}
+#contextDockScroll>#contextDockActions.dock-centered{justify-content:center}
+#contextDockActions.dock-primary>button>.dock-action-label{display:none}
+#contextDockActions.dock-primary>#quickTextAdd>.dock-action-label{display:block}
+#contextActionDock #contextDockActions.dock-primary.dock-roomy>button{flex-direction:column;min-height:52px;gap:3px}
+#contextDockActions.dock-primary.dock-roomy>button>.dock-action-label{display:block;font-size:11px}
+.dock-format-icon{display:inline-flex;align-items:center;gap:3px;font-size:17px;line-height:24px}
+.dock-format-icon b{font-weight:750}
+.dock-format-icon i{font-family:Georgia,serif;font-style:italic}
 
 /* free-text.css */
 .text-target-row{display:flex;align-items:center;gap:6px;min-width:0}
@@ -332,6 +341,10 @@ html[data-theme] #quickTextDelete{color:var(--ui-accent)!important}
 #photoInputRow .upload{display:flex;align-items:center;justify-content:center;min-height:44px;padding:8px;margin:0;font-size:12px}
 .photo-fit-control{min-width:0}
 #photoInputRow select{width:100%;min-height:44px;margin:0;font-size:13px;padding:8px}
+#photoInputRow #imageFit{display:none!important}
+#photoInputRow #toggleImageFit{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;min-width:0;min-height:44px;margin:0;padding:8px 5px;font-size:13px;line-height:1.25}
+#toggleImageFit svg{width:20px;height:20px;flex-shrink:0}
+#toggleImageFit span{min-width:0}
 .photo-fit-control>label,#richEditor>label[for=richTarget],#richPane-text>label[for=fontPickerOpen]{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden;clip-path:inset(50%);white-space:nowrap;padding:0!important;margin:0!important;border:0!important}
 html[data-theme] .text-target-row #deleteSelectedText{position:static;display:flex;flex:0 0 44px;width:44px;height:44px;min-width:44px;min-height:44px;padding:8px;border-radius:8px;box-shadow:none;border-color:var(--ui-line)!important;background:transparent!important}
 .text-target-row #deleteSelectedText[hidden]{display:none!important}
@@ -486,17 +499,24 @@ body.inspector-writing #desktopToolHost #closeToolDrawer{display:none!important}
 
 /* desktop-inspector.css */
 #desktopStart[hidden],#desktopTextActions[hidden]{display:none!important}
-@media(max-width:850px){#desktopStart,#desktopTextActions{display:none!important}}
-.desktop-text-chip,#desktopFreeTexts{display:none}
+#textFineControls{margin:8px 0 0;padding:0;border-bottom:0}
+#textFineControls>summary{min-height:44px;font-size:13px}
+#textFineControls .shared-position-controls{border:0;margin:0;padding:0}
+#textFineControls .shared-control-label,#textFineControls #textSpacingControls>summary{display:none}
+#textFineControls #textSpacingControls{border:0;padding:0;margin:0}
+@media(max-width:850px){#desktopStart{display:none!important}}
+body #richEditor #textAddMenuRow.simple-text-picker{display:block;margin:8px 0 10px}
+body #richEditor #textAddMenuRow.simple-text-picker>label{position:static!important;width:auto!important;height:auto!important;clip-path:none;overflow:visible;white-space:normal;display:block!important;font-size:13px;margin:0 0 6px!important}
+body #toolDrawer #textAddMenuRow.simple-text-picker>#richTarget{display:block!important;width:100%;min-height:44px;margin:0;font-size:14px}
+@media(max-width:850px){body #toolDrawer #textAddMenuRow.simple-text-picker>#richTarget{font-size:16px}}
+body #richEditor>.text-target-row{display:none!important}
+body #richEditor #desktopTextActions{display:flex;align-items:center;gap:8px;margin:10px 0 16px}
+body #richEditor #desktopTextActions>button{display:flex;flex:0 0 44px;flex-direction:row;align-items:center;justify-content:center;gap:6px;width:44px;min-width:44px;min-height:44px;padding:8px;font-size:13px;margin:0}
+body #richEditor #desktopTextActions>#addFreeText{flex:1;width:auto;color:var(--ui-accent);background:var(--ui-active)}
+body #richEditor #desktopTextActions>#desktopEditText{display:none}
+body #richEditor #desktopTextActions svg{width:20px;height:20px}
+body.inspector-writing #richEditor #textAddMenuRow.simple-text-picker{display:none}
 @media(min-width:851px){
- body.desktop-inspector #textAddMenuRow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) 34px;gap:3px;margin:8px 0}
- body.desktop-inspector #textAddMenuRow :is(.desktop-text-chip,#addFreeText){display:grid;place-items:center;min-height:38px;min-width:0;padding:3px 1px;font-size:12px}
- body.desktop-inspector #textAddMenuRow .desktop-text-chip[hidden]{display:none}
- body.desktop-inspector #textAddMenuRow .desktop-text-chip[aria-pressed=true]{background:var(--ui-active);border-color:var(--ui-accent);color:var(--ui-accent);font-weight:650}
- body.desktop-inspector #textAddMenuRow #addFreeText{grid-column:5;font-size:0}
- body.desktop-inspector #textAddMenuRow #addFreeText::before{content:'+';font-size:21px}
- body.desktop-inspector #textAddMenuRow #addFreeText>*{display:none}
- body.desktop-inspector #desktopFreeTexts:not([hidden]){display:block;margin:6px 0}
  body.desktop-inspector #desktopEditText{display:none}
  body.desktop-inspector #textWorkflow{display:none}
  body.desktop-inspector #richPane-layout{margin-top:14px;padding-top:10px;border-top:1px solid var(--ui-line)}
@@ -510,11 +530,8 @@ body.inspector-writing #desktopToolHost #closeToolDrawer{display:none!important}
  body.desktop-inspector.context-action-mode.unified-tools main .stage{height:calc(100dvh - 215px)}
  #desktopStart{padding:16px 0}#desktopStart h3{font-size:17px;margin:0 0 8px}#desktopStart p{color:var(--ui-muted);line-height:1.6;margin:0 0 20px}
  #desktopStart button{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;margin:10px 0;text-align:left}
- #desktopTextActions{display:flex;gap:5px;margin:8px 0 12px}#desktopTextActions button{display:flex;flex:1;flex-direction:column;align-items:center;gap:4px;padding:7px 4px;font-size:12px;min-width:0}
  #desktopStart svg,#desktopTextActions svg{width:20px;height:20px}
  body.desktop-inspector #toolDrawerContent{overflow-x:hidden}
- body.desktop-inspector #toolDrawer:has(#richEditor) .text-target-row,body.desktop-inspector #toolDrawer:has(#richEditor) label[for=richTarget]{display:none!important}
- body.desktop-inspector #toolDrawer:has(#richEditor) #richTarget{display:none!important}
  body.desktop-inspector:not(.inspector-writing) #toolDrawer:has(#richEditor) #textWritePane{display:block!important;margin:10px 0}
  body.desktop-inspector:not(.inspector-writing) #textWritePane textarea{min-height:64px;height:76px;font-size:16px}
  body.desktop-inspector:not(.inspector-writing) #writingHistory,body.desktop-inspector:not(.inspector-writing) #finishTextWriting{display:none!important}
@@ -539,6 +556,25 @@ body #typographyQuickRow button{flex:0 0 40px;min-width:40px;width:40px;min-heig
 .photo-main-row>.photo-actions button{position:relative;width:100%;min-width:0;min-height:44px;height:44px;padding:0}
 .photo-main-row>.photo-actions [data-photo-action=before]:before{content:'';position:absolute;left:-4px;top:10px;bottom:10px;border-left:1px solid var(--ui-line);pointer-events:none}
 .photo-actions .desktop-photo-exchange{display:none!important}
+@media(max-width:850px){
+ #imageList.compact-photo-gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(44px,1fr));gap:6px;align-items:start}
+ #imageList.compact-photo-gallery .photo-card,#imageList.compact-photo-gallery .photo-main-row{display:contents}
+ #imageList.compact-photo-gallery .photo-heading{position:relative;display:grid;place-items:center;order:0;min-width:44px;min-height:48px;width:100%;padding:2px;border:1px solid var(--ui-line);border-radius:10px;background:var(--ui-raised);transition:background-color .15s}
+ #imageList.compact-photo-gallery .photo-heading img{width:40px;height:40px;object-fit:cover;border-radius:7px}
+ #imageList.compact-photo-gallery .photo-heading span{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+ #imageList.compact-photo-gallery .photo-heading:after{content:attr(data-photo-number);position:absolute;right:1px;bottom:1px;padding:0 3px;font-size:10px;line-height:1.4;border-radius:4px;background:var(--ui-panel);color:var(--ui-text)}
+ #imageList.compact-photo-gallery .photo-card[aria-current=true] .photo-heading{border-color:#008bcd;box-shadow:0 0 0 1px #008bcd}
+ #imageList.compact-photo-gallery .photo-card.is-locked[aria-current=true] .photo-heading{border-style:dashed}
+ #imageList.compact-photo-gallery .photo-actions{display:none;grid-column:1/-1;order:1}
+ #imageList.compact-photo-gallery .photo-card[aria-current=true] .photo-actions{display:grid;grid-template-columns:repeat(5,minmax(44px,1fr));gap:6px;width:100%;margin:2px 0;overflow:visible}
+ #imageList.compact-photo-gallery .photo-actions button{min-width:44px;min-height:44px;width:100%}
+ #imageList.compact-photo-gallery .photo-actions [data-photo-action=before]{display:none}
+ #imageList.compact-photo-gallery .photo-actions .desktop-photo-exchange{display:flex!important;align-items:center;justify-content:center}
+ #imageList.compact-photo-gallery[data-photo-count="1"] .photo-actions .desktop-photo-exchange{display:none!important}
+ #imageList.compact-photo-gallery[data-photo-count="1"] .photo-card[aria-current=true] .photo-actions{grid-template-columns:repeat(4,minmax(44px,1fr))}
+ #imageList.compact-photo-gallery .photo-frame{display:none;grid-column:1/-1;order:2;padding:8px;border:1px solid var(--ui-line);border-radius:10px}
+ #imageList.compact-photo-gallery .photo-card[aria-current=true] .photo-frame:not([hidden]){display:block}
+}
 @media(min-width:851px){
  #toolDrawer:has(#imageList) :is(#desktopPhotoCollage,#desktopPhotoSwap,#desktopPhotoFilters,#desktopPhotoDelete){display:none}
  #imageList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
@@ -580,6 +616,20 @@ body #fontPickerOpen .font-chosen-name{order:1;flex:0 1 auto;max-width:38%;font-
 body #fontPickerOpen .font-change-hint{order:2;position:static;font-size:12px;margin:0}
 .design-section h3,#signatureLibrary h3,#blurHeading{margin:8px 0 12px;font-size:15px}.visual-choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.visual-choice-grid button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:10px;min-width:0;min-height:100px}.visual-choice-grid strong{font-size:13px}.visual-choice-grid small{font-size:11px;color:var(--ui-muted)}
 .format-symbol{display:block;height:34px;max-width:64px;border:2px solid currentColor;border-radius:3px}.format-grid [data-format-choice=landscape] .format-symbol{width:54px;height:auto}.visual-choice-grid button[aria-pressed=true]{outline:2px solid var(--ui-accent);outline-offset:-2px;background:var(--ui-active)!important}
+#designSection-ratio .format-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+#designSection-ratio .format-grid button{min-height:58px;padding:6px 3px;gap:5px;border-radius:10px}
+#designSection-ratio .format-grid strong{font-size:12px;font-weight:600}
+#designSection-ratio .format-grid .format-symbol{height:18px;max-width:32px}
+#designSection-ratio .format-grid [data-format-choice=landscape] .format-symbol{width:30px;height:auto}
+#selectedFormatCaption{margin:7px 0 0;font-size:12px;line-height:1.4;color:var(--ui-muted)}
+#fontPickerList .font-list-heading{font-size:13px;font-weight:600;line-height:1.4;margin:8px 0}
+#fontPickerList .font-recent-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-bottom:12px}
+#fontPickerList .font-recent-grid>.font-preview-option{height:100%;min-height:88px;margin:0;padding:8px 6px;gap:6px}
+#fontPickerList .font-recent-grid .font-option-name{width:100%;min-height:2.5em;font-size:11px;line-height:1.25;white-space:normal;overflow-wrap:anywhere}
+#fontPickerList .font-recent-grid .font-option-sample{width:100%;font-size:22px;line-height:1.2}
+#fontPickerList .font-recent-grid .font-preview-option[aria-checked=true]:after{display:none}
+#toolDrawerContent>.design-section{margin-bottom:0;padding-bottom:0;border-bottom:0}
+#toolDrawerContent>.design-section>.panel-help:last-child{margin-bottom:0}
 .composition-mini{display:flex;flex-direction:column;gap:4px;justify-content:flex-start;align-items:flex-start;box-sizing:border-box;width:100%;height:66px;padding:10px;border-radius:5px;background:linear-gradient(130deg,#2b485a,#ad7654);position:relative}.composition-mini i{display:block;width:65%;height:4px;border-radius:2px;background:#fff}.composition-mini i:last-child{width:45%}.mini-photo{justify-content:flex-end}.mini-center{align-items:center;justify-content:center}.mini-textLeft{justify-content:center;background:linear-gradient(90deg,#151b22,#54717b)}.mini-textRight{align-items:flex-end;justify-content:center;background:linear-gradient(90deg,#54717b,#151b22)}
 .design-style-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-bottom:18px}.design-style-actions button{display:flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:8px;font-size:12px}.design-style-actions #designSaveCurrent{grid-column:1/-1}.design-section .colorrow{display:flex;gap:8px;justify-content:space-between}.design-section .colorrow label{font-size:12px}.design-section .colorrow input{width:100%;min-width:40px;height:38px}
 body #toolSubnav button{min-width:0;padding:8px 5px;font-size:12px;flex:1}body #toolSubnav{gap:4px}
@@ -740,6 +790,7 @@ html[data-theme] #photoFilterPresets button[aria-pressed=true],html[data-theme] 
 .text-color-hex input{width:88px!important;min-width:0;min-height:38px;margin:0!important;padding:6px!important;font:12px ui-monospace,monospace}
 .text-color-hex input[aria-invalid=true]{outline:2px solid #ef4444}
 #openFragmentColors{margin:5px 0;font-size:13px}
+#openFragmentColors[hidden]{display:none!important}
 #fragmentColorDialog{width:min(92vw,340px);padding:16px;border:1px solid var(--ui-line);border-radius:12px}
 #fragmentColorDialog::backdrop{background:#0008}
 #fragmentColorTitle{margin:0;font-size:17px}
@@ -957,3 +1008,36 @@ html[data-theme] .glass-studio .stage{
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
  :root,:root[data-theme=dark]{--studio-glass:var(--ui-panel)}
 }
+
+/* color-eyedropper.css */
+.color-eyedropper-controls{display:inline-flex;align-items:center;gap:6px;max-width:100%;flex-shrink:0;vertical-align:middle}
+html[data-theme] .color-eyedropper-controls>input[type=color]{display:block;flex:0 0 44px;width:44px;height:44px;min-height:44px;margin:0;padding:3px}
+html[data-theme] button.color-eyedropper-button{display:inline-flex;align-items:center;justify-content:center;flex:0 0 44px;width:44px;height:44px;min-height:44px;padding:10px;margin:0}
+.color-eyedropper-button svg{width:20px;height:20px}
+#textColorControls .text-custom-color{flex-direction:column;align-items:flex-start}
+#textColorControls .rich-colors{align-items:flex-end;flex-wrap:wrap}
+.fill-color-row>.color-eyedropper-controls{justify-self:end;grid-column:2}
+.fill-color-row:has(.color-eyedropper-controls){grid-template-columns:minmax(0,1fr) 94px}
+.colorrow:has(.color-eyedropper-controls){display:grid;grid-template-columns:repeat(auto-fit,minmax(116px,1fr));gap:10px}
+.colorrow:has(.color-eyedropper-controls) label{min-width:0}
+.colorrow .color-eyedropper-controls{display:flex;width:max-content;margin-top:6px}
+html[data-theme] #colorSamplerDialog{width:min(700px,calc(100vw - 24px));max-height:calc(100dvh - 24px);padding:16px;margin:auto;border:1px solid var(--ui-line);border-radius:18px;background:var(--ui-panel);color:var(--ui-text);overflow:auto}
+#colorSamplerDialog::backdrop{background:#0009}
+.color-sampler-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+#colorSamplerTitle{font-size:16px;line-height:1.4;margin:0;min-width:0}
+#colorSamplerHint{font-size:13px;line-height:1.5;margin:8px 0 12px;color:var(--ui-muted)}
+#colorSamplerStage{display:flex;justify-content:center;align-items:center;position:relative;padding:0;min-width:0;overflow:hidden}
+#colorSamplerCanvas{display:block;width:auto;height:auto;max-width:100%;max-height:calc(100dvh - 230px);touch-action:none;cursor:crosshair;box-shadow:none}
+#colorSamplerCanvas:focus-visible{outline:2px solid var(--ui-accent);outline-offset:-2px}
+#colorSamplerLens{position:absolute;width:84px;height:84px;pointer-events:none;border:3px solid var(--ui-panel);outline:2px solid var(--ui-text);border-radius:50%;overflow:hidden;box-shadow:0 4px 16px #0005}
+#colorSamplerLens[hidden]{display:none}
+#colorSamplerLens canvas{display:block;width:100%;height:100%;image-rendering:pixelated}
+#colorSamplerLens span{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:10px;height:10px;border:1px solid white;outline:1px solid #222}
+.color-sampler-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:14px}
+#colorSamplerValue{display:flex;align-items:center;gap:8px;flex:1;min-width:120px}
+#colorSamplerSwatch{display:block;width:24px;height:24px;flex-shrink:0;border-radius:6px;border:1px solid var(--ui-line)}
+#colorSamplerHex{font-size:13px;font-variant-numeric:tabular-nums}
+#colorSamplerDialog button{min-height:44px;font-size:13px;padding:8px 12px}
+#colorSamplerScreen[hidden]{display:none}
+#colorSamplerStatus{font-size:13px;line-height:1.4;margin:8px 0 0}
+#colorSamplerStatus:empty{display:none}

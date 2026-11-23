@@ -1,15 +1,22 @@
 #desktopStart[hidden],#desktopTextActions[hidden]{display:none!important}
-@media(max-width:850px){#desktopStart,#desktopTextActions{display:none!important}}
-.desktop-text-chip,#desktopFreeTexts{display:none}
+#textFineControls{margin:8px 0 0;padding:0;border-bottom:0}
+#textFineControls>summary{min-height:44px;font-size:13px}
+#textFineControls .shared-position-controls{border:0;margin:0;padding:0}
+#textFineControls .shared-control-label,#textFineControls #textSpacingControls>summary{display:none}
+#textFineControls #textSpacingControls{border:0;padding:0;margin:0}
+@media(max-width:850px){#desktopStart{display:none!important}}
+body #richEditor #textAddMenuRow.simple-text-picker{display:block;margin:8px 0 10px}
+body #richEditor #textAddMenuRow.simple-text-picker>label{position:static!important;width:auto!important;height:auto!important;clip-path:none;overflow:visible;white-space:normal;display:block!important;font-size:13px;margin:0 0 6px!important}
+body #toolDrawer #textAddMenuRow.simple-text-picker>#richTarget{display:block!important;width:100%;min-height:44px;margin:0;font-size:14px}
+@media(max-width:850px){body #toolDrawer #textAddMenuRow.simple-text-picker>#richTarget{font-size:16px}}
+body #richEditor>.text-target-row{display:none!important}
+body #richEditor #desktopTextActions{display:flex;align-items:center;gap:8px;margin:10px 0 16px}
+body #richEditor #desktopTextActions>button{display:flex;flex:0 0 44px;flex-direction:row;align-items:center;justify-content:center;gap:6px;width:44px;min-width:44px;min-height:44px;padding:8px;font-size:13px;margin:0}
+body #richEditor #desktopTextActions>#addFreeText{flex:1;width:auto;color:var(--ui-accent);background:var(--ui-active)}
+body #richEditor #desktopTextActions>#desktopEditText{display:none}
+body #richEditor #desktopTextActions svg{width:20px;height:20px}
+body.inspector-writing #richEditor #textAddMenuRow.simple-text-picker{display:none}
 @media(min-width:851px){
- body.desktop-inspector #textAddMenuRow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) 34px;gap:3px;margin:8px 0}
- body.desktop-inspector #textAddMenuRow :is(.desktop-text-chip,#addFreeText){display:grid;place-items:center;min-height:38px;min-width:0;padding:3px 1px;font-size:12px}
- body.desktop-inspector #textAddMenuRow .desktop-text-chip[hidden]{display:none}
- body.desktop-inspector #textAddMenuRow .desktop-text-chip[aria-pressed=true]{background:var(--ui-active);border-color:var(--ui-accent);color:var(--ui-accent);font-weight:650}
- body.desktop-inspector #textAddMenuRow #addFreeText{grid-column:5;font-size:0}
- body.desktop-inspector #textAddMenuRow #addFreeText::before{content:'+';font-size:21px}
- body.desktop-inspector #textAddMenuRow #addFreeText>*{display:none}
- body.desktop-inspector #desktopFreeTexts:not([hidden]){display:block;margin:6px 0}
  body.desktop-inspector #desktopEditText{display:none}
  body.desktop-inspector #textWorkflow{display:none}
  body.desktop-inspector #richPane-layout{margin-top:14px;padding-top:10px;border-top:1px solid var(--ui-line)}
@@ -23,11 +30,8 @@
  body.desktop-inspector.context-action-mode.unified-tools main .stage{height:calc(100dvh - 215px)}
  #desktopStart{padding:16px 0}#desktopStart h3{font-size:17px;margin:0 0 8px}#desktopStart p{color:var(--ui-muted);line-height:1.6;margin:0 0 20px}
  #desktopStart button{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;margin:10px 0;text-align:left}
- #desktopTextActions{display:flex;gap:5px;margin:8px 0 12px}#desktopTextActions button{display:flex;flex:1;flex-direction:column;align-items:center;gap:4px;padding:7px 4px;font-size:12px;min-width:0}
  #desktopStart svg,#desktopTextActions svg{width:20px;height:20px}
  body.desktop-inspector #toolDrawerContent{overflow-x:hidden}
- body.desktop-inspector #toolDrawer:has(#richEditor) .text-target-row,body.desktop-inspector #toolDrawer:has(#richEditor) label[for=richTarget]{display:none!important}
- body.desktop-inspector #toolDrawer:has(#richEditor) #richTarget{display:none!important}
  body.desktop-inspector:not(.inspector-writing) #toolDrawer:has(#richEditor) #textWritePane{display:block!important;margin:10px 0}
  body.desktop-inspector:not(.inspector-writing) #textWritePane textarea{min-height:64px;height:76px;font-size:16px}
  body.desktop-inspector:not(.inspector-writing) #writingHistory,body.desktop-inspector:not(.inspector-writing) #finishTextWriting{display:none!important}

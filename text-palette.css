@@ -15,6 +15,7 @@
 .text-color-hex input{width:88px!important;min-width:0;min-height:38px;margin:0!important;padding:6px!important;font:12px ui-monospace,monospace}
 .text-color-hex input[aria-invalid=true]{outline:2px solid #ef4444}
 #openFragmentColors{margin:5px 0;font-size:13px}
+#openFragmentColors[hidden]{display:none!important}
 #fragmentColorDialog{width:min(92vw,340px);padding:16px;border:1px solid var(--ui-line);border-radius:12px}
 #fragmentColorDialog::backdrop{background:#0008}
 #fragmentColorTitle{margin:0;font-size:17px}

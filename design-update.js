@@ -5,7 +5,7 @@
  for(let [key,panel]of Object.entries(panels)){panel.id='designSection-'+key;panel.className='design-section';$('designPanel').append(panel)}
  function heading(parent,title){let h=document.createElement('h3');h.textContent=title;parent.append(h)}
  heading(panels.ratio,'Formato de las tarjetas');let formats=document.createElement('div');formats.className='visual-choice-grid format-grid';panels.ratio.append(formats);
- for(let [value,title,ratio,measure]of [['square','Cuadrado','1 / 1','1080 × 1080'],['portrait','Vertical','4 / 5','1080 × 1350'],['story','Historia','9 / 16','1080 × 1920'],['landscape','Horizontal','16 / 9','1920 × 1080']]){let b=document.createElement('button');b.type='button';b.dataset.formatChoice=value;b.innerHTML='<span class="format-symbol" style="aspect-ratio:'+ratio+'"></span><strong>'+title+'</strong><small>'+measure+'</small>';b.onclick=()=>{historyGroup=null;$('format').value=value;$('format').dispatchEvent(new Event('change',{bubbles:true}))};formats.append(b);buttons.push(b)}let note=document.createElement('p');note.className='panel-help';note.textContent='Las tarjetas activas comparten formato para combinarlas en un carrusel.';panels.ratio.append(note);
+ for(let [value,title,ratio,measure]of [['square','Cuadrado','1 / 1','1080 × 1080'],['portrait','Vertical','4 / 5','1080 × 1350'],['story','Historia','9 / 16','1080 × 1920'],['landscape','Horizontal','16 / 9','1920 × 1080']]){let b=document.createElement('button');b.type='button';b.dataset.formatChoice=value;b.dataset.formatName=title;b.title=title+' · '+measure+' px';b.setAttribute('aria-label',title+' · '+ratio.replace(/ /g,'').replace('/',':')+' · '+measure+' píxeles');b.innerHTML='<span class="format-symbol" style="aspect-ratio:'+ratio+'" aria-hidden="true"></span><strong>'+ratio.replace(/ /g,'').replace('/',':')+'</strong>';b.onclick=()=>{historyGroup=null;$('format').value=value;$('format').dispatchEvent(new Event('change',{bubbles:true}))};formats.append(b);buttons.push(b)}let formatCaption=document.createElement('p');formatCaption.id='selectedFormatCaption';formatCaption.setAttribute('aria-live','polite');panels.ratio.append(formatCaption);let note=document.createElement('p');note.className='panel-help';note.textContent='Las tarjetas activas comparten formato para combinarlas en un carrusel.';panels.ratio.append(note);
  heading(panels.composition,'Distribución del texto');let layouts=document.createElement('div');layouts.className='visual-choice-grid composition-grid';panels.composition.append(layouts);
  const previews=[];
  for(const [value,title] of [['editorial','Libre'],['photo','Abajo a la izquierda'],['bottomCenter','Abajo al centro'],['center','Centrado'],['textLeft','Izquierda'],['textRight','Derecha']]){
@@ -54,6 +54,8 @@
  let previewSource;
  function update(){
   const page=state.pages[state.current];
+  const activeFormat=buttons.find(button=>button.dataset.formatChoice===state.format);
+  if(activeFormat)setEditorText(formatCaption,activeFormat.title);
   for(const button of buttons)button.setAttribute('aria-pressed',String(button.dataset.formatChoice?button.dataset.formatChoice===state.format:button.dataset.compositionChoice===(page.layout==='collage'?'editorial':page.layout)));
   if(!isMobileEditor()&&layouts.getClientRects().length){
    const source=sources(page)[0]||'';

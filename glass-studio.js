@@ -11,7 +11,9 @@
   inspector.hidden=!desktop;
   if(host.parentElement!==inspector)inspector.append(host);
   const destination=desktop?$('desktopFilmstrip'):document.body;
-  if(create.parentElement!==destination)destination.append(create);
+  if(desktop){
+   if(destination.firstElementChild!==create)destination.prepend(create);
+  }else if(create.parentElement!==destination)destination.append(create);
  }
  window.addEventListener('resize',arrange);
  matchMedia('(max-width:850px)').addEventListener('change',arrange);

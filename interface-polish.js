@@ -27,3 +27,35 @@
  imageList=function(){decoratedList();addPhotoSwapButtons()};
  addPhotoSwapButtons();
 })();
+
+// Mobile thumbnails share the existing action row of the selected photo.
+// Keep the controls inside their photo card so crop, lock and history handlers
+// continue to identify their original target through DOM ancestry.
+(function(){
+ let busy=false,lastPage=null,lastIndex=0;
+ function syncGallery(){
+  if(busy)return;busy=true;
+  try{
+   const host=$('imageList'),page=state.pages[state.current],count=sources(page).length;
+   const mobile=isMobileEditor();
+   host.classList.toggle('compact-photo-gallery',mobile);
+   setEditorAttribute(host,'data-photo-count',count);
+   if(page!==lastPage){lastPage=page;lastIndex=0}
+   if(activePhoto?.page===page&&activePhoto.index<count)lastIndex=activePhoto.index;
+   if(mobile&&mobileTool==='photos'&&photoToolMode==='photos'&&!$('toolDrawer').hidden&&count&&
+      (activePhoto?.page!==page||activePhoto.index>=count||window.owSelectionCleared)){
+    selectPhoto(page,Math.min(lastIndex,count-1));
+   }
+   for(const card of host.querySelectorAll('.photo-card')){
+    const heading=card.querySelector('.photo-heading');
+    if(heading)setEditorAttribute(heading,'data-photo-number',+card.dataset.photoIndex+1);
+   }
+  }finally{busy=false}
+ }
+ const beforeList=imageList;imageList=function(){beforeList();syncGallery()};
+ const beforeSelect=selectPhoto;selectPhoto=function(...args){beforeSelect(...args);syncGallery()};
+ const beforeRender=render;render=function(refresh=true){beforeRender(refresh);syncGallery()};
+ window.addEventListener('resize',syncGallery);
+ document.addEventListener('DOMContentLoaded',syncGallery);
+ syncGallery();
+})();

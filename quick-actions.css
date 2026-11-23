@@ -54,3 +54,12 @@ html[data-theme] #contextActionDock #quickPhotoLock[aria-pressed=true]{backgroun
 #desktopPhotoFilters{display:grid;place-items:center;min-width:40px;min-height:40px;padding:6px}
 #desktopPhotoFilters[hidden]{display:none}
 @media(max-width:400px){#desktopPhotoFilters svg{width:18px;height:18px}}
+#contextDockScroll>#contextDockActions{display:flex;justify-content:flex-start}
+#contextDockScroll>#contextDockActions.dock-centered{justify-content:center}
+#contextDockActions.dock-primary>button>.dock-action-label{display:none}
+#contextDockActions.dock-primary>#quickTextAdd>.dock-action-label{display:block}
+#contextActionDock #contextDockActions.dock-primary.dock-roomy>button{flex-direction:column;min-height:52px;gap:3px}
+#contextDockActions.dock-primary.dock-roomy>button>.dock-action-label{display:block;font-size:11px}
+.dock-format-icon{display:inline-flex;align-items:center;gap:3px;font-size:17px;line-height:24px}
+.dock-format-icon b{font-weight:750}
+.dock-format-icon i{font-family:Georgia,serif;font-style:italic}

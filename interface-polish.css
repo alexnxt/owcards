@@ -12,6 +12,25 @@ body #typographyQuickRow button{flex:0 0 40px;min-width:40px;width:40px;min-heig
 .photo-main-row>.photo-actions button{position:relative;width:100%;min-width:0;min-height:44px;height:44px;padding:0}
 .photo-main-row>.photo-actions [data-photo-action=before]:before{content:'';position:absolute;left:-4px;top:10px;bottom:10px;border-left:1px solid var(--ui-line);pointer-events:none}
 .photo-actions .desktop-photo-exchange{display:none!important}
+@media(max-width:850px){
+ #imageList.compact-photo-gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(44px,1fr));gap:6px;align-items:start}
+ #imageList.compact-photo-gallery .photo-card,#imageList.compact-photo-gallery .photo-main-row{display:contents}
+ #imageList.compact-photo-gallery .photo-heading{position:relative;display:grid;place-items:center;order:0;min-width:44px;min-height:48px;width:100%;padding:2px;border:1px solid var(--ui-line);border-radius:10px;background:var(--ui-raised);transition:background-color .15s}
+ #imageList.compact-photo-gallery .photo-heading img{width:40px;height:40px;object-fit:cover;border-radius:7px}
+ #imageList.compact-photo-gallery .photo-heading span{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+ #imageList.compact-photo-gallery .photo-heading:after{content:attr(data-photo-number);position:absolute;right:1px;bottom:1px;padding:0 3px;font-size:10px;line-height:1.4;border-radius:4px;background:var(--ui-panel);color:var(--ui-text)}
+ #imageList.compact-photo-gallery .photo-card[aria-current=true] .photo-heading{border-color:#008bcd;box-shadow:0 0 0 1px #008bcd}
+ #imageList.compact-photo-gallery .photo-card.is-locked[aria-current=true] .photo-heading{border-style:dashed}
+ #imageList.compact-photo-gallery .photo-actions{display:none;grid-column:1/-1;order:1}
+ #imageList.compact-photo-gallery .photo-card[aria-current=true] .photo-actions{display:grid;grid-template-columns:repeat(5,minmax(44px,1fr));gap:6px;width:100%;margin:2px 0;overflow:visible}
+ #imageList.compact-photo-gallery .photo-actions button{min-width:44px;min-height:44px;width:100%}
+ #imageList.compact-photo-gallery .photo-actions [data-photo-action=before]{display:none}
+ #imageList.compact-photo-gallery .photo-actions .desktop-photo-exchange{display:flex!important;align-items:center;justify-content:center}
+ #imageList.compact-photo-gallery[data-photo-count="1"] .photo-actions .desktop-photo-exchange{display:none!important}
+ #imageList.compact-photo-gallery[data-photo-count="1"] .photo-card[aria-current=true] .photo-actions{grid-template-columns:repeat(4,minmax(44px,1fr))}
+ #imageList.compact-photo-gallery .photo-frame{display:none;grid-column:1/-1;order:2;padding:8px;border:1px solid var(--ui-line);border-radius:10px}
+ #imageList.compact-photo-gallery .photo-card[aria-current=true] .photo-frame:not([hidden]){display:block}
+}
 @media(min-width:851px){
  #toolDrawer:has(#imageList) :is(#desktopPhotoCollage,#desktopPhotoSwap,#desktopPhotoFilters,#desktopPhotoDelete){display:none}
  #imageList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
