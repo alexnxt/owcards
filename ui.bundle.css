@@ -153,6 +153,17 @@ html[data-theme] body.mobile-app .file-menu>#projectMenu{position:fixed;top:var(
 }
 .theme-menu-separator{display:none}
 @media(max-width:380px){html[data-theme] body.mobile-app header>.brand{font-size:0;gap:0;justify-self:start}html[data-theme] body.mobile-app header>.brand .mark{font-size:17px}}
+#keyboardShortcutsDialog{width:min(94vw,520px);max-height:calc(100dvh - 24px);padding:20px;border:1px solid var(--ui-line);border-radius:16px;overflow:auto}
+#keyboardShortcutsDialog::backdrop{background:#0008}
+.keyboard-help-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+#keyboardShortcutsTitle{font-size:18px;margin:0}
+#keyboardShortcutsDialog button{min-height:44px}
+#keyboardShortcutsDialog dl{margin:0}
+#keyboardShortcutsDialog dl>div{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:10px 0;border-bottom:1px solid var(--ui-line);font-size:14px;align-items:center}
+#keyboardShortcutsDialog dt{display:flex;align-items:center;flex-wrap:wrap;gap:4px}
+#keyboardShortcutsDialog dd{margin:0;line-height:1.45}
+#keyboardShortcutsDialog kbd{font-family:inherit;font-size:12px;padding:3px 5px;border:1px solid var(--ui-line);border-radius:5px;background:var(--ui-active);white-space:nowrap}
+#keyboardShortcutsDialog p{font-size:13px;line-height:1.5;color:var(--ui-muted);margin:14px 0 0}
 
 /* precision-controls.css */
 .safe-range.precision-range{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:center;gap:6px;min-height:44px;margin:0 0 8px}
@@ -733,10 +744,10 @@ body.inspector-writing #textAddMenuRow{display:none}
 #textAddMenu small{flex:0 0 auto;color:var(--ui-muted);font-size:11px}#textAddMenu .restore-text-option small{color:var(--ui-accent);font-weight:650}#textAddMenu button:last-child{border-top:1px solid var(--ui-line);border-radius:0;margin-top:4px}#textAddMenu button:hover,#textAddMenu button:focus-visible{background:var(--ui-active);outline:2px solid var(--ui-accent);outline-offset:-2px}
 #textAddMenu #textRestoreOptions button{padding-left:20px;border:0;margin:0;border-radius:6px}
 #textAddMenu #removeAllCardText{border-top:1px solid var(--ui-line);margin-top:5px;color:var(--ui-accent)!important}
-#clearAllTextDialog{width:min(92vw,380px);padding:20px;border:1px solid var(--ui-line);border-radius:12px}
-#clearAllTextDialog::backdrop{background:#0008}
-#clearAllTextDialog h2{font-size:18px;margin:0 0 12px}
-#clearAllTextDialog p{font-size:14px;line-height:1.5}
+#clearAllTextDialog,#cleanCardDialog{width:min(92vw,380px);padding:20px;border:1px solid var(--ui-line);border-radius:12px}
+#clearAllTextDialog::backdrop,#cleanCardDialog::backdrop{background:#0008}
+#clearAllTextDialog h2,#cleanCardDialog h2{font-size:18px;margin:0 0 12px}
+#clearAllTextDialog p,#cleanCardDialog p{font-size:14px;line-height:1.5}
 .clear-text-actions{display:flex;justify-content:flex-end;gap:8px}
 
 /* photo-filters.css */
@@ -952,7 +963,7 @@ html[data-theme] .glass-studio .stage{
  }
 }
 
-/* Compact shelf on tablet and smaller desktop windows; the add action follows the cards. */
+/* Compact shelf on tablet and smaller desktop windows. */
 @media(min-width:851px) and (max-width:1366px){
  body.glass-studio.card-workspace main>#desktopFilmstrip{width:fit-content;max-width:100%;align-self:flex-start;padding:4px 6px;gap:6px;border-radius:16px}
  .glass-studio #desktopFilmstrip #pages{flex:0 1 auto;padding:2px;gap:6px}
@@ -1007,6 +1018,18 @@ html[data-theme] .glass-studio .stage{
 }
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
  :root,:root[data-theme=dark]{--studio-glass:var(--ui-panel)}
+}
+/* The close control is a sibling of the preview button, never a nested button. */
+.filmstrip-card{position:relative;flex:0 0 auto;min-width:0}
+#pages .filmstrip-card>.filmstrip-card-close{display:none}
+@media(min-width:851px){
+ html[data-theme] .glass-studio #pages .filmstrip-card>.filmstrip-card-close{position:absolute;top:0;right:0;z-index:1;display:flex;align-items:center;justify-content:center;width:24px;height:24px;min-width:24px;min-height:24px;margin:0;padding:0;border:1px solid var(--ui-line);border-radius:50%;background:var(--ui-panel)!important;color:var(--ui-text)!important;font-size:19px;line-height:1;opacity:0;pointer-events:none;box-shadow:0 1px 4px #0003}
+ html[data-theme] .glass-studio #pages .filmstrip-card:is(:hover,:focus-within,.is-current)>.filmstrip-card-close{opacity:1;pointer-events:auto}
+ html[data-theme] .glass-studio #pages .filmstrip-card>.filmstrip-card-close:disabled{opacity:.4;cursor:default}
+}
+@media(min-width:851px) and (any-pointer:coarse){
+ .glass-studio #desktopFilmstrip #pages{padding:10px 10px 3px;gap:10px}
+ html[data-theme] .glass-studio #pages .filmstrip-card>.filmstrip-card-close{top:-8px;right:-8px;width:32px;height:32px;min-width:32px;min-height:32px;opacity:1;pointer-events:auto}
 }
 
 /* color-eyedropper.css */

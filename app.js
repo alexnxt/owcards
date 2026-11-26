@@ -59,7 +59,7 @@ function recordHistory(){
     return;
   }
   const active=document.activeElement;
-  const group=changes.cardId!==null&&active&&['INPUT','TEXTAREA'].includes(active.tagName)?active:null;
+  const group=changes.cardId!==null?(window.owKeyboardHistoryGroup||(active&&['INPUT','TEXTAREA'].includes(active.tagName)?active:null)):null;
   const latest=undoStack.at(-1);
   if(group&&group===historyGroup&&latest?.cardId===changes.cardId){
     latest.after=next;

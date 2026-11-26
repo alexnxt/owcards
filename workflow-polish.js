@@ -17,8 +17,52 @@ let recentButton=document.createElement('button');recentButton.id='openRecentCar
 let libraryHistory=document.createElement('div');libraryHistory.className='library-history';for(let [id,label,back]of [['libraryUndo','Deshacer',true],['libraryRedo','Rehacer',false]]){let b=document.createElement('button');b.id=id;b.type='button';b.title=label;b.setAttribute('aria-label',label);b.innerHTML='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="'+(back?'M9 5 3 11l6 6M3 11h10a7 7 0 0 1 7 7':'m15 5 6 6-6 6M21 11H11a7 7 0 0 0-7 7')+'"/></svg>';b.onclick=()=>travelHistory(back,true);libraryHistory.append(b)}$('closeRecentCards').before(libraryHistory);
 function updateLibraryHistory(){$('libraryUndo').disabled=libraryBusy||!historyEntry(true,true);$('libraryRedo').disabled=libraryBusy||!historyEntry(false,true)}
 function setRecentStatus(text){$('recentCardsStatus').textContent=text}
+// Share the same archive-first close action between the library and filmstrip.
+async function closeActiveCard(page){
+ if(libraryBusy||state.pages.length<2||!state.pages.includes(page))return false;
+ const project=state,revision=storage.revision,format=state.format;
+ libraryBusy=true;
+ window.owClosingCards=true;
+ updateLibraryHistory();
+ renderCardPreviews();
+ try{
+  await archiveCard(page,format,state.project);
+  if(state!==project||storage.revision!==revision){
+   const message='La tarjeta cambió. Inténtalo de nuevo.';
+   if(dialog.open)setRecentStatus(message);else toast(message);
+   return false;
+  }
+  const index=state.pages.indexOf(page);
+  if(index<0||state.pages.length<2)return false;
+  historyGroup=null;
+  const closingCurrent=index===state.current;
+  state.pages.splice(index,1);
+  if(index<state.current)state.current--;
+  else if(closingCurrent)state.current=Math.min(index,state.pages.length-1);
+  if(closingCurrent){selectedText=null;activePhoto=null;}
+  sync();
+  persist();
+  historyGroup=null;
+  const removal=historyEntry(true);
+  if(dialog.open)showRecent();
+  toast('Tarjeta cerrada.',{label:'Deshacer',run:()=>{
+   if(removal&&historyEntry(true)===removal)travelHistory(true);
+   else toast('Usa Deshacer en la barra para retroceder desde el último cambio.');
+  }});
+  return true;
+ }catch(error){
+  if(dialog.open)setRecentStatus(error.message);else toast(error.message||'No se pudo cerrar la tarjeta.');
+  return false;
+ }finally{
+  libraryBusy=false;
+  window.owClosingCards=false;
+  updateLibraryHistory();
+  renderCardPreviews();
+ }
+}
+window.owCloseActiveCard=closeActiveCard;
 let activePreviewObserver;
-function showActive(version){let pages=state.pages.slice(),format=state.format,project=state,grid=$('activeCardsGrid');grid.replaceChildren();$('activeCardsTitle').textContent='Tarjetas activas · '+pages.length;let previews=[];for(let [index,page] of pages.entries()){let button=document.createElement('button'),im=document.createElement('img'),name=document.createElement('strong'),position=document.createElement('small');button.type='button';button.className='recent-card-preview active-card-preview';button.dataset.activeIndex=index;button.setAttribute('aria-current',String(index===state.current));button.setAttribute('aria-label','Abrir tarjeta activa '+(index+1)+' de '+pages.length+': '+(page.title.trim()||'Sin título'));im.alt='';im.style.visibility='hidden';position.textContent='Tarjeta '+(index+1)+(index===state.current?' · Actual':'');name.textContent=page.title.trim().replace(/\s+/g,' ')||'Sin título';button.append(im,position,name);button.onclick=()=>{if(state!==project||state.pages[index]!==page){showRecent();return}historyGroup=null;selectedText=null;activePhoto=null;state.current=index;if(isMobileEditor()&&mobileTool)closeToolDrawer();dialog.close();sync();persist()};let article=document.createElement('article'),close=document.createElement('button');article.className='recent-card active-card';close.type='button';close.className='card-close';close.textContent='×';close.setAttribute('aria-label','Cerrar tarjeta activa '+(index+1)+': '+(page.title.trim()||'Sin título'));close.disabled=pages.length===1;close.title=pages.length===1?'Conserva al menos una tarjeta activa':'Cerrar tarjeta';close.onclick=async()=>{if(libraryBusy)return;if(state!==project||state.pages[index]!==page){showRecent();return}if(state.pages.length<2)return;libraryBusy=true;close.disabled=true;let revision=storage.revision;try{await archiveCard(page,format,state.project);if(storage.revision!==revision){setRecentStatus('La tarjeta cambió. Inténtalo de nuevo.');return}historyGroup=null;state.pages.splice(index,1);if(index<state.current)state.current--;else if(index===state.current)state.current=Math.min(index,state.pages.length-1);selectedText=null;activePhoto=null;sync();persist();showRecent();toast('Tarjeta guardada en Recientes. Deshacer la recupera.')}catch(error){setRecentStatus(error.message)}finally{libraryBusy=false;updateLibraryHistory();close.disabled=false}};article.append(button,close);grid.append(article);previews.push({page,im})}
+function showActive(version){let pages=state.pages.slice(),format=state.format,project=state,grid=$('activeCardsGrid');grid.replaceChildren();$('activeCardsTitle').textContent='Tarjetas activas · '+pages.length;let previews=[];for(let [index,page] of pages.entries()){let button=document.createElement('button'),im=document.createElement('img'),name=document.createElement('strong'),position=document.createElement('small');button.type='button';button.className='recent-card-preview active-card-preview';button.dataset.activeIndex=index;button.setAttribute('aria-current',String(index===state.current));button.setAttribute('aria-label','Abrir tarjeta activa '+(index+1)+' de '+pages.length+': '+(page.title.trim()||'Sin título'));im.alt='';im.style.visibility='hidden';position.textContent='Tarjeta '+(index+1)+(index===state.current?' · Actual':'');name.textContent=page.title.trim().replace(/\s+/g,' ')||'Sin título';button.append(im,position,name);button.onclick=()=>{if(state!==project||state.pages[index]!==page){showRecent();return}historyGroup=null;selectedText=null;activePhoto=null;state.current=index;if(isMobileEditor()&&mobileTool)closeToolDrawer();dialog.close();sync();persist()};let article=document.createElement('article'),close=document.createElement('button');article.className='recent-card active-card';close.type='button';close.className='card-close';close.textContent='×';close.setAttribute('aria-label','Cerrar tarjeta activa '+(index+1)+': '+(page.title.trim()||'Sin título'));close.disabled=pages.length===1;close.title=pages.length===1?'Conserva al menos una tarjeta activa':'Cerrar tarjeta';close.onclick=()=>{if(state!==project||state.pages[index]!==page){showRecent();return}return closeActiveCard(page)};article.append(button,close);grid.append(article);previews.push({page,im})}
 let queue=Promise.resolve();const loadPreview=({page,im})=>{queue=queue.then(async()=>{if(version!==generation||!dialog.open)return;try{const src=await thumbnail(page,format);if(version!==generation||!dialog.open)return;im.src=src;im.style.visibility='visible'}catch{im.alt='Vista previa no disponible';im.style.visibility='visible'}})};if(typeof IntersectionObserver!=='function'){previews.forEach(loadPreview);return}activePreviewObserver?.disconnect();const byButton=new Map(previews.map(item=>[item.im.parentElement,item]));const observer=new IntersectionObserver(entries=>{for(const {target,isIntersecting} of entries)if(isIntersecting){observer.unobserve(target);loadPreview(byButton.get(target));byButton.delete(target)}},{root:dialog});activePreviewObserver=observer;for(const {im} of previews)observer.observe(im.parentElement);}
 
 async function showRecent(){updateLibraryHistory();let version=++generation;selected=null;$('restoreRecentCard').hidden=true;$('restoreRecentCard').disabled=true;setRecentStatus('Cargando tarjetas…');$('recentCardsGrid').replaceChildren();showActive(version);try{let items=await listRecent();if(version!==generation||!dialog.open)return;setRecentStatus(items.length?'Selecciona una reciente y pulsa Abrir tarjeta.':'Todavía no hay tarjetas recientes. Las tarjetas que cierres aparecerán aquí.');for(let item of items){let article=document.createElement('article'),button=document.createElement('button'),im=document.createElement('img'),name=document.createElement('strong'),date=document.createElement('small'),remove=document.createElement('button');article.className='recent-card';button.type='button';button.className='recent-card-preview';button.dataset.recentId=item.id;button.setAttribute('aria-pressed','false');im.src=item.thumbnail;im.alt='';name.textContent=item.title;date.textContent=new Intl.DateTimeFormat('es',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}).format(new Date(item.updatedAt));button.append(im,name,date);button.onclick=()=>{selected=item;$('restoreRecentCard').hidden=false;$('restoreRecentCard').disabled=false;dialog.querySelectorAll('[data-recent-id]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));setRecentStatus((state.mode==='carousel'||state.pages.length>1)&&state.format!==item.format?'Se abrirá adaptada al formato del proyecto actual.':item.title)};remove.type='button';remove.className='recent-remove card-close';remove.textContent='×';remove.title='Cerrar tarjeta reciente';remove.setAttribute('aria-label','Eliminar de recientes: '+item.title);remove.onclick=async()=>{remove.disabled=true;try{await removeWithUndo(item);await showRecent()}catch(error){setRecentStatus(error.message);remove.disabled=false}};article.append(button,remove);$('recentCardsGrid').append(article)}}catch(error){if(version===generation)setRecentStatus(error.message||'No se pudieron leer las tarjetas recientes.')}}

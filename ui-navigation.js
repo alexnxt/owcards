@@ -22,7 +22,7 @@ function removeSelectedCollagePhoto(){
   if(!window.owSelectionCleared&&activePhoto&&sources(state.pages[state.current]).length>=2)removePhoto(activePhoto.page,activePhoto.index);
 }
 document.addEventListener('keydown',event=>{
-  if(event.key!=='Delete'||event.repeat||event.defaultPrevented||event.isComposing||
+  if(window.owEditorKeyboardEnabled||event.key!=='Delete'||event.repeat||event.defaultPrevented||event.isComposing||
     event.ctrlKey||event.metaKey||event.altKey||event.shiftKey||drag||
     document.querySelector('dialog[open]')||event.target.isContentEditable||
     event.target.closest?.('input,textarea,select,[role="textbox"]'))return;
