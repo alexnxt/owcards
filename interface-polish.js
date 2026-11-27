@@ -42,7 +42,7 @@
    setEditorAttribute(host,'data-photo-count',count);
    if(page!==lastPage){lastPage=page;lastIndex=0}
    if(activePhoto?.page===page&&activePhoto.index<count)lastIndex=activePhoto.index;
-   if(mobile&&mobileTool==='photos'&&photoToolMode==='photos'&&!$('toolDrawer').hidden&&count&&
+   if(mobile&&mobileTool==='photos'&&photoToolMode==='photos'&&!$('toolDrawer').hidden&&count&&!window.owSelectedOverlay?.()&&
       (activePhoto?.page!==page||activePhoto.index>=count||window.owSelectionCleared)){
     selectPhoto(page,Math.min(lastIndex,count-1));
    }

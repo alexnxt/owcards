@@ -19,7 +19,7 @@ menu.addEventListener('click',e=>{let action=e.composedPath().find(n=>n instance
  dialog.innerHTML='<h2 id="cleanCardTitle">¿Limpiar esta tarjeta y conservar la firma?</h2><p id="cleanCardDescription">Se quitarán las fotos y los textos de la tarjeta actual, excepto Marca / usuario. Se conservará el diseño. Puedes recuperar todo con Deshacer.</p><div class="clear-text-actions"><button type="button" id="cancelCleanCard">Cancelar</button><button type="button" id="confirmCleanCard" class="primary">Limpiar tarjeta</button></div>';
  document.body.append(dialog);
  let pending=null;
- function hasContent(page){return sources(page).length>0||page.freeTextKeys?.length>0||cardTextKeys(page).some(key=>key!=='brand'&&!!page[key])}
+ function hasContent(page){return page.overlays?.length>0||sources(page).length>0||page.freeTextKeys?.length>0||cardTextKeys(page).some(key=>key!=='brand'&&!!page[key])}
  function update(){setEditorProperty(trigger,'disabled',!hasContent(state.pages[state.current]))}
  trigger.onclick=()=>{
   const page=state.pages[state.current];
@@ -42,6 +42,7 @@ menu.addEventListener('click',e=>{let action=e.composedPath().find(n=>n instance
   if(!hasContent(page)){dialog.close();return}
   historyGroup=null;
   for(const key of cardTextKeys(page))if(key!=='brand')deleteTextBlock(page,key);
+  page.overlays=[];
   page.image=null;
   page.images=[];
   page.crops=[];

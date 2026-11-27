@@ -43,5 +43,6 @@
  // Observe only new range wrappers; value updates are otherwise event driven.
  let queued=false;new MutationObserver(records=>{if(!records.some(r=>[...r.addedNodes].some(n=>n.nodeType===1&&(n.matches('.precision-range')||n.querySelector('.precision-range:not(.compact-decorated)')))))return;if(!queued){queued=true;queueMicrotask(()=>{queued=false;decorate()})}}).observe(document.body,{childList:true,subtree:true});
  new MutationObserver(()=>{sync();syncPhotoZoom()}).observe(photoPlus,{attributes:true,attributeFilter:['hidden']});
+ window.refreshCompactControls=()=>{sync();syncPhotoZoom()};
  decorate();if(mobileTool)activatePanel(mobileTool);syncPhotoZoom();
 })();

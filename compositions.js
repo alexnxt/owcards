@@ -11,7 +11,7 @@ function diagonalRegions(n,w,h,gap=0){
 function drawDiagonalCollage(c,src,p,w,h){
  let m=p.margin;diagonalRegions(src.length,w-2*m,h-2*m,p.gap).forEach(({polygon,box},i)=>{
   c.save();c.translate(m,m);c.beginPath();polygon.forEach(([x,y],j)=>j?c.lineTo(x,y):c.moveTo(x,y));c.closePath();c.clip();
-  let im=picture(src[i]);if(im)cover(c,im,...box,p.crops[i],p.imageFit,p.edgeFade,p.fadeEdges,p.fillMode==='custom'?p.fillColor:null);applyGrain(c,[box],p.grain);c.restore();
+  let im=picture(src[i]);if(im)cover(c,im,...box,p.crops[i],p.imageFit,p.edgeFade,p.fadeEdges,p.fillMode==='custom'?p.fillColor:null);applyGrain(c,[box],p.grain*(p.crops[i]?.opacity??100)/100);c.restore();
  });
 }
 function usesCollage(p){return sources(p).length>1}

@@ -6,7 +6,7 @@ const PHOTO_CACHE_BUDGET=64*1024*1024;
 const photoSourcePins=new Map();
 let photoCacheTrimTimer;
 function retainPhotoSources(pages){
- const held=[...new Set(pages.flatMap(sources))];let released=false;
+ const held=[...new Set(pages.flatMap(imageAssets))];let released=false;
  for(const source of held)photoSourcePins.set(source,(photoSourcePins.get(source)||0)+1);
  return ()=>{if(released)return;released=true;for(const source of held){const count=photoSourcePins.get(source)-1;if(count>0)photoSourcePins.set(source,count);else photoSourcePins.delete(source)}schedulePhotoCacheTrim()};
 }
@@ -28,8 +28,8 @@ function releaseDecodedPhoto(source){
  imageCache.delete(source);
 }
 function trimPhotoCache(){
- const active=new Set([...sources(state.pages[state.current]),...photoSourcePins.keys()]);
- const project=new Set(state.pages.flatMap(sources));
+ const active=new Set([...imageAssets(state.pages[state.current]),...photoSourcePins.keys()]);
+ const project=new Set(state.pages.flatMap(imageAssets));
  for(const [source,image] of imageCache)if(image.complete&&!project.has(source)&&!active.has(source))releaseDecodedPhoto(source);
  let bytes=0;for(const image of imageCache.values())bytes+=decodedPhotoBytes(image);
  for(const [source,image] of imageCache){
@@ -71,7 +71,7 @@ function renderCardPreviews(){
   setEditorAttribute(item.close,'title',state.pages.length===1?'Conserva al menos una tarjeta activa':'Cerrar tarjeta');
   item.label.textContent=String(i+1);if(!same){host.append(item.container);cardPreviewObserver?.observe(item.button)}
   if(cardPreviewObserver&&!visibleCardPreviews.has(item.button))return;
-  let src=sources(p),key=state.format+':'+i+':'+cardPreviewFontRevision+':'+JSON.stringify(p,(key,value)=>key==='image'||key==='images'?undefined:value);
+  let src=imageAssets(p),key=state.format+':'+i+':'+cardPreviewFontRevision+':'+JSON.stringify(p,(key,value)=>key==='image'||key==='images'||key==='src'?undefined:value);
   if(item.key===key&&src.length===item.sources.length&&src.every((s,j)=>s===item.sources[j]))return;
   if(typeof photoFilterPreviewActive!=='undefined'&&photoFilterPreviewActive&&item.key!==null)return;
   draw(item.canvas,p,i,state.format,240);
